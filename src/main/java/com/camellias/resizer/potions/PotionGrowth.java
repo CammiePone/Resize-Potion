@@ -112,18 +112,16 @@ public class PotionGrowth extends Potion
 			{
 				float scale = 1.5F;
 				
-				GL11.glPushMatrix();
-				GL11.glTranslated(0, 0, 0);
-				GL11.glScaled(scale, scale, scale);
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(scale, scale, scale);
 			}
 			
 			if(growth.getAmplifier() == 1)
 			{
 				float scale = 2.0F;
 				
-				GL11.glPushMatrix();
-				GL11.glTranslated(0, 0, 0);
-				GL11.glScaled(scale, scale, scale);
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(scale, scale, scale);
 			}
 		}
 		
@@ -133,18 +131,16 @@ public class PotionGrowth extends Potion
 			{
 				float scale = 0.5F;
 				
-				GL11.glPushMatrix();
-				GL11.glTranslated(0, 0, 0);
-				GL11.glScaled(scale, scale, scale);
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(scale, scale, scale);
 			}
 			
 			if(shrinking.getAmplifier() == 1)
 			{
 				float scale = 0.25F;
 				
-				GL11.glPushMatrix();
-				GL11.glTranslated(0, 0, 0);
-				GL11.glScaled(scale, scale, scale);
+				GlStateManager.pushMatrix();
+				GlStateManager.scale(scale, scale, scale);
 			}
 		}
 	}

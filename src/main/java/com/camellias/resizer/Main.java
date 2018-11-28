@@ -1,6 +1,7 @@
 package com.camellias.resizer;
 
 import com.camellias.resizer.init.ModPotionTypes;
+import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.potions.PotionGrowth;
 import com.camellias.resizer.potions.PotionShrinking;
 import com.camellias.resizer.proxy.CommonProxy;
@@ -39,6 +40,7 @@ public class Main
 	{
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
+		ResizePacketHandler.init();
 	}
 	
 	@EventHandler
