@@ -1,0 +1,11 @@
+potion.effect.shrinking=Potion of Resizing
+potion.effect.growth=Potion of Resizing
+splash_potion.effect.shrinking=Splash Potion of Resizing
+splash_potion.effect.growth=Splash Potion of Resizing
+lingering_potion.effect.shrinking=Lingering Potion of Resizing
+lingering_potion.effect.growth=Lingering Potion of Resizing
+tipped_arrow.effect.shrinking=Arrow of Shrinking
+tipped_arrow.effect.growth=Arrow of Growth
+
+effect.shrinking=Shrinking
+effect.growth=Growth
