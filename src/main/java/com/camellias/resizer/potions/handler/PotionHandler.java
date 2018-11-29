@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.camellias.resizer.Main;
+import com.camellias.resizer.capability.SimpleCapability;
 
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,6 +14,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -20,8 +23,27 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PotionHandler
+public class PotionHandler extends SimpleCapability
 {
+	@CapabilityInject(value = PotionHandler.class)
+	public static final Capability<PotionHandler> CAPABILITY = null;
+	
+	public static final PotionHandler INSTANCE = new PotionHandler();
+	
+	public int scale;
+	
+	@Override
+	public boolean isRelevantFor(Entity entity)
+	{
+		return entity instanceof EntityPlayer;
+	}
+	
+	@Override
+	public SimpleCapability getNewInstance()
+	{
+		return INSTANCE;
+	}
+	
 	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
 	
 	@SubscribeEvent
@@ -82,11 +104,6 @@ public class PotionHandler
 			player.jumpMovementFactor *= 1.75F;
 			player.fallDistance = 0.0F;
 			
-			if(player.isPotionActive(Main.GROWTH))
-			{
-				player.removeActivePotionEffect(Main.GROWTH);
-			}
-			
 			try
 			{
 				setSize.invoke(player, player.width, player.height);
@@ -111,6 +128,7 @@ public class PotionHandler
 		if(player.isPotionActive(Main.GROWTH) == false && player.isPotionActive(Main.SHRINKING) == false)
 		{
 			player.eyeHeight = player.getDefaultEyeHeight();
+			player.stepHeight = 0.6F;
 		}
 	}
 	

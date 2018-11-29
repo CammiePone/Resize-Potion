@@ -3,6 +3,7 @@ package com.camellias.resizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.camellias.resizer.capability.SimpleCapability;
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.potions.PotionGrowth;
@@ -53,12 +54,14 @@ public class Main
 		
 		//----Thank you Zabi for helping with forcing the potion effects to sync across clients.----//
 		ResizePacketHandler.init();
+		
+		SimpleCapability.preInit(PotionHandler.class);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		
+		SimpleCapability.init(PotionHandler.class, Reference.MODID, PotionHandler.CAPABILITY, PotionHandler.INSTANCE);
 	}
 	
 	@EventHandler
