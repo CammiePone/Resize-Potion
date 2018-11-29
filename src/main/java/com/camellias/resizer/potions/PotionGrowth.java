@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-import org.lwjgl.opengl.GL11;
-
 import com.camellias.resizer.Main;
 import com.camellias.resizer.Reference;
 
@@ -23,6 +21,8 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PotionGrowth extends Potion
 {
@@ -96,10 +96,9 @@ public class PotionGrowth extends Potion
 		{
 			player.eyeHeight = player.getDefaultEyeHeight();
 		}
-		
-		System.out.println(player.getActivePotionEffects() + " " + player.getName());
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
 	{
@@ -145,6 +144,7 @@ public class PotionGrowth extends Potion
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerRenderPost(RenderPlayerEvent.Post event)
 	{
