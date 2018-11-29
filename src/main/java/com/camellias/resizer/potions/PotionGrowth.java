@@ -96,6 +96,8 @@ public class PotionGrowth extends Potion
 		{
 			player.eyeHeight = player.getDefaultEyeHeight();
 		}
+		
+		System.out.println(player.getActivePotionEffects() + " " + player.getName());
 	}
 	
 	@SubscribeEvent
@@ -149,7 +151,7 @@ public class PotionGrowth extends Potion
 		if(event.getEntityPlayer().isPotionActive(Main.GROWTH) || 
 				event.getEntityPlayer().isPotionActive(Main.SHRINKING))
 		{
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 }

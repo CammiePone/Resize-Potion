@@ -45,7 +45,7 @@ public class Main
 		MinecraftForge.EVENT_BUS.register(new PotionGrowth("growth"));
 		MinecraftForge.EVENT_BUS.register(new PotionShrinking("shrinking"));
 		
-		ResizePacketHandler.init();
+		//ResizePacketHandler.init();
 	}
 	
 	@EventHandler
