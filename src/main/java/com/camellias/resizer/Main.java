@@ -1,9 +1,13 @@
 package com.camellias.resizer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.potions.PotionGrowth;
 import com.camellias.resizer.potions.PotionShrinking;
+import com.camellias.resizer.potions.handler.PotionHandler;
 import com.camellias.resizer.proxy.CommonProxy;
 
 import net.minecraft.potion.Potion;
@@ -28,6 +32,8 @@ public class Main
 	public static final Potion SHRINKING = new PotionShrinking("shrinking");
 	public static final Potion GROWTH = new PotionGrowth("growth");
 	
+	public static final Logger logger = LogManager.getLogger(Reference.NAME);
+	
 	@Instance
 	public static Main instance;
 	
@@ -42,10 +48,11 @@ public class Main
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
 		
-		MinecraftForge.EVENT_BUS.register(new PotionGrowth("growth"));
-		MinecraftForge.EVENT_BUS.register(new PotionShrinking("shrinking"));
+		MinecraftForge.EVENT_BUS.register(PotionHandler.class);
 		
-		//ResizePacketHandler.init();
+		
+		//----Thank you Zabi for helping with forcing the potion effects to sync across clients.----//
+		ResizePacketHandler.init();
 	}
 	
 	@EventHandler
