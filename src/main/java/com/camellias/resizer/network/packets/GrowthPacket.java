@@ -3,6 +3,7 @@ package com.camellias.resizer.network.packets;
 import com.camellias.resizer.Main;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
@@ -17,23 +18,23 @@ public class GrowthPacket implements IMessage
 		
 	}
 	
-	public EntityPlayer toSend;
+	public int playerID;
 	
-	public GrowthPacket(EntityPlayer toSend)
+	public GrowthPacket(EntityPlayer player)
 	{
-		this.toSend = toSend;
-	}
-	
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		buf.readInt();
+		this.playerID = player.getEntityId();
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeInt(toSend.getEntityId());
+		buf.writeInt(playerID);
+	}
+	
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		this.playerID = buf.readInt();
 	}
 	
 //-------------------------------------------------------------------------------------------------------------------------//
@@ -44,13 +45,17 @@ public class GrowthPacket implements IMessage
 		public IMessage onMessage(GrowthPacket message, MessageContext ctx)
 		{
 			EntityPlayerMP serverPlayer = ctx.getServerHandler().player;
-			int amount = message.toSend.getEntityId();
 			
 			serverPlayer.getServerWorld().addScheduledTask(() ->
 			{
-				EntityPlayer player = (EntityPlayer) serverPlayer.world.getEntityByID(amount);
+				int entityID = message.playerID;
 				
-				player.addPotionEffect(new PotionEffect(Main.GROWTH));
+				if(serverPlayer.world.getEntityByID(entityID) instanceof EntityPlayer)
+				{
+					EntityPlayer player = (EntityPlayer) serverPlayer.world.getEntityByID(entityID);
+					
+					player.addPotionEffect(new PotionEffect(Main.GROWTH));
+				}
 			});
 			
 			return null;
