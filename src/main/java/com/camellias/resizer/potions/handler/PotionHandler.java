@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.camellias.resizer.Main;
-import com.camellias.resizer.capability.SimpleCapability;
+import com.camellias.resizer.capability.SizeCapability;
 
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,8 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -23,31 +21,12 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PotionHandler extends SimpleCapability
+public class PotionHandler
 {
-	@CapabilityInject(value = PotionHandler.class)
-	public static final Capability<PotionHandler> CAPABILITY = null;
-	
-	public static final PotionHandler INSTANCE = new PotionHandler();
-	
-	public int scale;
-	
-	@Override
-	public boolean isRelevantFor(Entity entity)
-	{
-		return entity instanceof EntityPlayer;
-	}
-	
-	@Override
-	public SimpleCapability getNewInstance()
-	{
-		return INSTANCE;
-	}
-	
 	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
 	
 	@SubscribeEvent
-	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	public void onPlayerUpdate(TickEvent.PlayerTickEvent event)
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
@@ -60,6 +39,8 @@ public class PotionHandler extends SimpleCapability
 			player.width = player.height * (1F / 3F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
+			player.getCapability(SizeCapability.CAPABILITY, null).scale = player.height;
+			player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 			
 			player.eyeHeight = player.height * 0.9F;
 			player.stepHeight = player.height / 3F;
@@ -98,6 +79,8 @@ public class PotionHandler extends SimpleCapability
 			player.width = player.height * (1F / 3F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
+			player.getCapability(SizeCapability.CAPABILITY, null).scale = player.height;
+			player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 			
 			player.eyeHeight = player.height * 0.85F;
 			player.stepHeight = player.height / 3F;
@@ -133,7 +116,7 @@ public class PotionHandler extends SimpleCapability
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerJump(LivingJumpEvent event)
+	public void onPlayerJump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
@@ -163,7 +146,7 @@ public class PotionHandler extends SimpleCapability
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+	public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
 	{
 		//----Thank you Melonslise from the MMD Discord for helping getting the rendering working properly.----//
 		
@@ -176,21 +159,29 @@ public class PotionHandler extends SimpleCapability
 		{
 			if(growth.getAmplifier() == 0)
 			{
-				float scale = 1.5F;
+				player.getCapability(SizeCapability.CAPABILITY, null).scale = 1.5F;
+				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 				
 				GlStateManager.pushMatrix();
-				GlStateManager.scale(scale, scale, scale);
-				GlStateManager.translate((event.getX() / scale) - event.getX(), 
-						(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale);
+				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
+						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
+						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
 			}
 			else
 			{
-				float scale = growth.getAmplifier() + 1.0F;
+				player.getCapability(SizeCapability.CAPABILITY, null).scale = growth.getAmplifier() + 1.0F;
+				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 				
 				GlStateManager.pushMatrix();
-				GlStateManager.scale(scale, scale, scale);
-				GlStateManager.translate((event.getX() / scale) - event.getX(), 
-						(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale);
+				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
+						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
+						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
 			}
 		}
 		
@@ -198,21 +189,29 @@ public class PotionHandler extends SimpleCapability
 		{
 			if(shrinking.getAmplifier() == 0)
 			{
-				float scale = 0.5F;
+				player.getCapability(SizeCapability.CAPABILITY, null).scale = 0.5F;
+				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 				
 				GlStateManager.pushMatrix();
-				GlStateManager.scale(scale, scale, scale);
-				GlStateManager.translate((event.getX() / scale) - event.getX(), 
-						(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale);
+				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
+						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
+						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
 			}
 			else
 			{
-				float scale = (float) Math.pow(0.25D, shrinking.getAmplifier());
+				player.getCapability(SizeCapability.CAPABILITY, null).scale = (float) Math.pow(0.25D, shrinking.getAmplifier());
+				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 				
 				GlStateManager.pushMatrix();
-				GlStateManager.scale(scale, scale, scale);
-				GlStateManager.translate((event.getX() / scale) - event.getX(), 
-						(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
+						player.getCapability(SizeCapability.CAPABILITY, null).scale);
+				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
+						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
+						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
 			}
 		}
 	}

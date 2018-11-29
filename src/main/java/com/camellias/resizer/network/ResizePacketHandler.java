@@ -2,6 +2,7 @@ package com.camellias.resizer.network;
 
 import com.camellias.resizer.Reference;
 import com.camellias.resizer.capability.CapabilityMessage;
+import com.camellias.resizer.network.packets.SimpleMessage;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;

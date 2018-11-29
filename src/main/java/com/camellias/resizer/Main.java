@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.camellias.resizer.capability.SimpleCapability;
+import com.camellias.resizer.capability.SizeCapability;
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.potions.PotionGrowth;
@@ -49,19 +50,20 @@ public class Main
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
 		
-		MinecraftForge.EVENT_BUS.register(PotionHandler.class);
+		MinecraftForge.EVENT_BUS.register(new PotionHandler());
 		
 		
 		//----Thank you Zabi for helping with forcing the potion effects to sync across clients.----//
 		ResizePacketHandler.init();
 		
-		SimpleCapability.preInit(PotionHandler.class);
+		SimpleCapability.setup(ResizePacketHandler.INSTANCE);
+		SimpleCapability.preInit(SizeCapability.class);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		SimpleCapability.init(PotionHandler.class, Reference.MODID, PotionHandler.CAPABILITY, PotionHandler.INSTANCE);
+		SimpleCapability.init(SizeCapability.class, Reference.MODID, SizeCapability.CAPABILITY, SizeCapability.INSTANCE);
 	}
 	
 	@EventHandler
