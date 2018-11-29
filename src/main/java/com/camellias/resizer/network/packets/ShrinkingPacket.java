@@ -3,21 +3,23 @@ package com.camellias.resizer.network.packets;
 import com.camellias.resizer.Main;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class SizePacket implements IMessage
+public class ShrinkingPacket implements IMessage
 {
-	public SizePacket()
+	public ShrinkingPacket()
 	{
 		
 	}
 	
-	public int toSend;
+	public EntityPlayer toSend;
 	
-	public SizePacket(int toSend)
+	public ShrinkingPacket(EntityPlayer toSend)
 	{
 		this.toSend = toSend;
 	}
@@ -31,23 +33,24 @@ public class SizePacket implements IMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeInt(toSend);
+		buf.writeInt(toSend.getEntityId());
 	}
 	
 //-------------------------------------------------------------------------------------------------------------------------//
 	
-	public static class SizePacketHandler implements IMessageHandler<SizePacket, IMessage>
+	public static class ShrinkingPacketHandler implements IMessageHandler<ShrinkingPacket, IMessage>
 	{
 		@Override
-		public IMessage onMessage(SizePacket message, MessageContext ctx)
+		public IMessage onMessage(ShrinkingPacket message, MessageContext ctx)
 		{
 			EntityPlayerMP serverPlayer = ctx.getServerHandler().player;
-			int amount = message.toSend;
+			int amount = message.toSend.getEntityId();
 			
 			serverPlayer.getServerWorld().addScheduledTask(() ->
 			{
-				serverPlayer.getActivePotionEffect(Main.GROWTH);
-				serverPlayer.getActivePotionEffect(Main.SHRINKING);
+				EntityPlayer player = (EntityPlayer) serverPlayer.world.getEntityByID(amount);
+				
+				player.addPotionEffect(new PotionEffect(Main.SHRINKING));
 			});
 			
 			return null;

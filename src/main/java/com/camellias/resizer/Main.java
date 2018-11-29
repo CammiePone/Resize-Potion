@@ -7,6 +7,7 @@ import com.camellias.resizer.potions.PotionShrinking;
 import com.camellias.resizer.proxy.CommonProxy;
 
 import net.minecraft.potion.Potion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -40,7 +41,9 @@ public class Main
 	{
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
-		ResizePacketHandler.init();
+		MinecraftForge.EVENT_BUS.register(new PotionGrowth("growth"));
+		MinecraftForge.EVENT_BUS.register(new PotionShrinking("shrinking"));
+		//ResizePacketHandler.init();
 	}
 	
 	@EventHandler

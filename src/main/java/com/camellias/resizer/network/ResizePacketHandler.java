@@ -1,7 +1,8 @@
 package com.camellias.resizer.network;
 
 import com.camellias.resizer.Reference;
-import com.camellias.resizer.network.packets.SizePacket;
+import com.camellias.resizer.network.packets.GrowthPacket;
+import com.camellias.resizer.network.packets.ShrinkingPacket;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -19,7 +20,8 @@ public class ResizePacketHandler
 	
 	public static void init()
 	{
-		INSTANCE.registerMessage(SizePacket.SizePacketHandler.class, SizePacket.class, next(), Side.SERVER);
+		INSTANCE.registerMessage(GrowthPacket.GrowthPacketHandler.class, GrowthPacket.class, next(), Side.SERVER);
+		INSTANCE.registerMessage(ShrinkingPacket.ShrinkingPacketHandler.class, ShrinkingPacket.class, next(), Side.SERVER);
 	}
 	
 	public static int next()
