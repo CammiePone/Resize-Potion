@@ -6,11 +6,9 @@ import java.util.UUID;
 
 import com.camellias.resizer.Main;
 import com.camellias.resizer.Reference;
-import com.camellias.resizer.attributes.CustomAttributes;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,9 +16,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -36,7 +32,10 @@ public class PotionShrinking extends Potion
 		super(false, 65480);
 		this.setPotionName("effect." + name);
 		this.setIconIndex(1, 0);
-		this.registerPotionAttributeModifier(CustomAttributes.HEIGHT, uuid.toString(), -0.5D, 0);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, uuid.toString(), 0.5D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE, uuid.toString(), -1.0D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, uuid.toString(), -0.5D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, uuid.toString(), 0.5D, 2);
 		
 		this.setRegistryName(new ResourceLocation(Reference.MODID + name));
 	}
@@ -63,6 +62,8 @@ public class PotionShrinking extends Potion
 			
 			player.eyeHeight = player.height * 0.85F;
 			player.stepHeight = player.height / 3F;
+			player.jumpMovementFactor *= 1.75F;
+			player.fallDistance = 0.0F;
 			
 			if(player.isPotionActive(Main.GROWTH))
 			{
@@ -86,16 +87,27 @@ public class PotionShrinking extends Potion
 				e.printStackTrace();
 			}
 			
-			if(Loader.isModLoaded("metamorph"))
+			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
+            		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerJump(LivingJumpEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
+		
+		if(entity.isPotionActive(Main.SHRINKING))
+		{
+			if(potion.getAmplifier() == 0)
 			{
-                player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
-                		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
-            }
+				entity.motionY += potion.getAmplifier() + 0.25D;
+			}
 			else
 			{
-				player.setEntityBoundingBox(new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, 
-						aabb.minX + player.width, aabb.minY + player.height, aabb.minZ + player.width));
-            }
+				entity.motionY += potion.getAmplifier() / 2.0D;
+			}
 		}
 	}
 }

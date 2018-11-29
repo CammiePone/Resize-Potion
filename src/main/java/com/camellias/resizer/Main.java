@@ -31,19 +31,21 @@ public class Main
 	@Instance
 	public static Main instance;
 	
-	//Proxy
+	//----Proxy----//
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.COMMON_PROXY_CLASS)
 	public static CommonProxy proxy;
 	
-	//Initialization
+	//----Initialization----//
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
+		
 		MinecraftForge.EVENT_BUS.register(new PotionGrowth("growth"));
 		MinecraftForge.EVENT_BUS.register(new PotionShrinking("shrinking"));
-		//ResizePacketHandler.init();
+		
+		ResizePacketHandler.init();
 	}
 	
 	@EventHandler

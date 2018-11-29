@@ -8,23 +8,18 @@ import org.lwjgl.opengl.GL11;
 
 import com.camellias.resizer.Main;
 import com.camellias.resizer.Reference;
-import com.camellias.resizer.attributes.CustomAttributes;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -40,7 +35,10 @@ public class PotionGrowth extends Potion
 		super(false, 16750080);
 		this.setPotionName("effect." + name);
 		this.setIconIndex(0, 0);
-		this.registerPotionAttributeModifier(CustomAttributes.HEIGHT, uuid.toString(), 0.9D, 0);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, uuid.toString(), -0.2D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE, uuid.toString(), 0.5D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, uuid.toString(), 0.5D, 2);
+		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, uuid.toString(), -0.5D, 2);
 		
 		this.setRegistryName(new ResourceLocation(Reference.MODID + name));
 	}
@@ -61,7 +59,7 @@ public class PotionGrowth extends Potion
 		if(player.isPotionActive(Main.GROWTH))
 		{
 			player.height = 1.8F + (potion.getAmplifier() + 1F);
-			player.width = 0.6F;//player.height * (1F / 3F);
+			player.width = player.height * (1F / 3F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
 			
@@ -90,16 +88,8 @@ public class PotionGrowth extends Potion
 				e.printStackTrace();
 			}
             
-			if(Loader.isModLoaded("metamorph"))
-			{
-                player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
-                		player.posX + d0, aabb.minY+ (double)player.height, player.posZ + d0));
-            }
-			else
-			{
-				player.setEntityBoundingBox(new AxisAlignedBB(aabb.minX, aabb.minY, aabb.minZ, 
-						aabb.minX + player.width, aabb.minY + player.height, aabb.minZ + player.width));
-            }
+			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
+            		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
 		
 		if(player.isPotionActive(Main.GROWTH) == false && player.isPotionActive(Main.SHRINKING) == false)
@@ -125,10 +115,9 @@ public class PotionGrowth extends Potion
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(scale, scale, scale);
 			}
-			
-			if(growth.getAmplifier() == 1)
+			else
 			{
-				float scale = 2.0F;
+				float scale = growth.getAmplifier() + 1.0F;
 				
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(scale, scale, scale);
@@ -144,10 +133,9 @@ public class PotionGrowth extends Potion
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(scale, scale, scale);
 			}
-			
-			if(shrinking.getAmplifier() == 1)
+			else
 			{
-				float scale = 0.25F;
+				float scale = (float) Math.pow(0.25D, shrinking.getAmplifier());
 				
 				GlStateManager.pushMatrix();
 				GlStateManager.scale(scale, scale, scale);
