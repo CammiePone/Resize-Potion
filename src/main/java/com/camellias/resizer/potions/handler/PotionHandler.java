@@ -48,17 +48,13 @@ public class PotionHandler
 				
 				if(target.isPotionActive(Main.GROWTH))
 				{
-					GrowthPacket growthPacket = new GrowthPacket(target);
-					growthPacket.duration = growth.getDuration();
-					growthPacket.amplifier = growth.getAmplifier();
+					GrowthPacket growthPacket = new GrowthPacket(target, growth.getDuration(), growth.getAmplifier());
 					
 					ResizePacketHandler.INSTANCE.sendTo(growthPacket, (EntityPlayerMP) player);
 				}
 				if(target.isPotionActive(Main.SHRINKING))
 				{
-					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(target);
-					shrinkingPacket.duration = shrinking.getDuration();
-					shrinkingPacket.amplifier = shrinking.getAmplifier();
+					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(target, shrinking.getDuration(), shrinking.getAmplifier());
 					
 					ResizePacketHandler.INSTANCE.sendTo(shrinkingPacket, (EntityPlayerMP) player);
 				}
@@ -92,11 +88,9 @@ public class PotionHandler
 			
 			if(playerGrown == false)
 			{
-				if(player.ticksExisted % 40 == 0)
+				if(player.ticksExisted % 50 == 0)
 				{
-					GrowthPacket growthPacket = new GrowthPacket(player);
-					growthPacket.duration = growth.getDuration();
-					growthPacket.amplifier = growth.getAmplifier();
+					GrowthPacket growthPacket = new GrowthPacket(player, growth.getDuration(), growth.getAmplifier());
 					
 					playerGrown = true;
 					ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
@@ -142,11 +136,9 @@ public class PotionHandler
 			
 			if(playerShrunk == false)
 			{
-				if(player.ticksExisted % 40 == 0)
+				if(player.ticksExisted % 50 == 0)
 				{
-					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player);
-					shrinkingPacket.duration = shrinking.getDuration();
-					shrinkingPacket.amplifier = shrinking.getAmplifier();
+					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player, shrinking.getDuration(), shrinking.getAmplifier());
 					
 					playerShrunk = true;
 					ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
@@ -185,7 +177,7 @@ public class PotionHandler
 			
 			if(playerGrown == false && playerShrunk == false)
 			{
-				if(player.ticksExisted % 40 == 0)
+				if(player.ticksExisted % 50 == 0)
 				{
 					NormalSizePacket normalSizePacket = new NormalSizePacket(player);
 					

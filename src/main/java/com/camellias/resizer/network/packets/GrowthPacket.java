@@ -21,21 +21,27 @@ public class GrowthPacket implements IMessage
 	public int duration;
 	public int amplifier;
 	
-	public GrowthPacket(EntityPlayer player)
+	public GrowthPacket(EntityPlayer player, int duration, int amplifier)
 	{
 		this.playerID = player.getEntityId();
+		this.duration = duration;
+		this.amplifier = amplifier;
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(playerID);
+		buf.writeInt(duration);
+		buf.writeInt(amplifier);
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
 		this.playerID = buf.readInt();
+		this.duration = buf.readInt();
+		this.amplifier = buf.readInt();
 	}
 	
 //-------------------------------------------------------------------------------------------------------------------------//
