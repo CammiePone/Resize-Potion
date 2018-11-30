@@ -28,7 +28,7 @@ public class CommonProxy
 	{
 		if(context.side.isServer())
 		{
-			return context.getServerHandler().player.mcServer;
+			return context.getServerHandler().player.server;
 		}
 		else
 		{

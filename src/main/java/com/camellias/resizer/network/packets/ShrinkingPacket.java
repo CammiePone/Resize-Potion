@@ -10,16 +10,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class GrowthPacket implements IMessage
+public class ShrinkingPacket implements IMessage
 {
-	public GrowthPacket()
+	public ShrinkingPacket()
 	{
 		
 	}
 	
 	public int playerID;
 	
-	public GrowthPacket(EntityPlayer player)
+	public ShrinkingPacket(EntityPlayer player)
 	{
 		this.playerID = player.getEntityId();
 	}
@@ -38,10 +38,10 @@ public class GrowthPacket implements IMessage
 	
 //-------------------------------------------------------------------------------------------------------------------------//
 	
-	public static class GrowthPacketHandler implements IMessageHandler<GrowthPacket, IMessage>
+	public static class ShrinkingPacketHandler implements IMessageHandler<ShrinkingPacket, IMessage>
 	{
 		@Override
-		public IMessage onMessage(GrowthPacket message, MessageContext ctx)
+		public IMessage onMessage(ShrinkingPacket message, MessageContext ctx)
 		{
 			Main.proxy.getThreadListener(ctx).addScheduledTask(() ->
 			{
@@ -49,7 +49,7 @@ public class GrowthPacket implements IMessage
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
-					player.addPotionEffect(new PotionEffect(Main.GROWTH));
+					player.addPotionEffect(new PotionEffect(Main.SHRINKING));
 					
 					player.sendMessage(new TextComponentString("Have a packet!"));
 				}
