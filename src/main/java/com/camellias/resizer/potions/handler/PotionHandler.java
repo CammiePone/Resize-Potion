@@ -168,7 +168,7 @@ public class PotionHandler
 			
 			if(player.ticksExisted % 20 == 0)
 			{
-				ResizePacketHandler.INSTANCE.sendToAllTracking(new NormalSizePacket(), player);
+				ResizePacketHandler.INSTANCE.sendToAllTracking(new NormalSizePacket(player), player);
 			}
 		}
 	}
