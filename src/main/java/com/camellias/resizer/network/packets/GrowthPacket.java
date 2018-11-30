@@ -3,9 +3,7 @@ package com.camellias.resizer.network.packets;
 import com.camellias.resizer.Main;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -44,15 +42,11 @@ public class GrowthPacket implements IMessage
 		@Override
 		public IMessage onMessage(GrowthPacket message, MessageContext ctx)
 		{
-			EntityPlayerMP serverPlayer = ctx.getServerHandler().player;
-			
-			serverPlayer.getServerWorld().addScheduledTask(() ->
+			Main.proxy.getThreadListener(ctx).addScheduledTask(() ->
 			{
-				int entityID = message.playerID;
-				
-				if(serverPlayer.world.getEntityByID(entityID) instanceof EntityPlayer)
+				if(Main.proxy.getPlayer(ctx) != null)
 				{
-					EntityPlayer player = (EntityPlayer) serverPlayer.world.getEntityByID(entityID);
+					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
 					player.addPotionEffect(new PotionEffect(Main.GROWTH));
 				}

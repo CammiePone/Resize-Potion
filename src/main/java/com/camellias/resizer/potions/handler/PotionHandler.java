@@ -2,19 +2,23 @@ package com.camellias.resizer.potions.handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import com.camellias.resizer.Main;
-import com.camellias.resizer.capability.SizeCapability;
+import com.camellias.resizer.network.ResizePacketHandler;
+import com.camellias.resizer.network.packets.GrowthPacket;
 
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -24,14 +28,35 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PotionHandler
 {
 	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
+	public static UUID uuid = UUID.fromString("e9cb6e24-46e5-45ce-97e7-6c1664aed7f9");
 	
 	@SubscribeEvent
-	public void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	public static void trackingEvent(StartTracking event)
+	{
+		if(event.getEntityPlayer().world != null && !event.getEntityPlayer().world.isRemote)
+		{
+			EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+			
+			if(event.getTarget() instanceof EntityPlayer)
+			{
+				EntityPlayer target = (EntityPlayer) event.getTarget();
+				
+				if(target.isPotionActive(Main.GROWTH) || target.isPotionActive(Main.SHRINKING))
+				{
+					ResizePacketHandler.INSTANCE.sendTo(new GrowthPacket(target), player);
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
 		EntityPlayer player = event.player;
 		PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
+		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 		
 		if(player.isPotionActive(Main.GROWTH))
 		{
@@ -39,15 +64,13 @@ public class PotionHandler
 			player.width = player.height * (1F / 3F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
-			player.getCapability(SizeCapability.CAPABILITY, null).scale = player.height;
-			player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 			
 			player.eyeHeight = player.height * 0.9F;
 			player.stepHeight = player.height / 3F;
 			
 			if(player.isPotionActive(Main.SHRINKING))
 			{
-				player.removeActivePotionEffect(Main.SHRINKING);
+				player.removePotionEffect(Main.SHRINKING);
 			}
 			
 			try
@@ -71,16 +94,12 @@ public class PotionHandler
             		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
 		
-		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
-		
 		if(player.isPotionActive(Main.SHRINKING))
 		{
 			player.height = 0.9F / (shrinking.getAmplifier() + 1);
 			player.width = player.height * (1F / 3F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
-			player.getCapability(SizeCapability.CAPABILITY, null).scale = player.height;
-			player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
 			
 			player.eyeHeight = player.height * 0.85F;
 			player.stepHeight = player.height / 3F;
@@ -116,7 +135,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerJump(LivingJumpEvent event)
+	public static void onPlayerJump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
@@ -146,7 +165,7 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event)
 	{
 		//----Thank you Melonslise from the MMD Discord for helping getting the rendering working properly.----//
 		
@@ -155,64 +174,14 @@ public class PotionHandler
 		PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
 		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 		
-		if(player.isPotionActive(Main.GROWTH))
+		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
 		{
-			if(growth.getAmplifier() == 0)
-			{
-				player.getCapability(SizeCapability.CAPABILITY, null).scale = 1.5F;
-				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
-				
-				GlStateManager.pushMatrix();
-				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale);
-				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
-						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
-						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
-			}
-			else
-			{
-				player.getCapability(SizeCapability.CAPABILITY, null).scale = growth.getAmplifier() + 1.0F;
-				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
-				
-				GlStateManager.pushMatrix();
-				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale);
-				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
-						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
-						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
-			}
-		}
-		
-		if(player.isPotionActive(Main.SHRINKING))
-		{
-			if(shrinking.getAmplifier() == 0)
-			{
-				player.getCapability(SizeCapability.CAPABILITY, null).scale = 0.5F;
-				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
-				
-				GlStateManager.pushMatrix();
-				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale);
-				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
-						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
-						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
-			}
-			else
-			{
-				player.getCapability(SizeCapability.CAPABILITY, null).scale = (float) Math.pow(0.25D, shrinking.getAmplifier());
-				player.getCapability(SizeCapability.CAPABILITY, null).markDirty((byte) 0);
-				
-				GlStateManager.pushMatrix();
-				GlStateManager.scale(player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale, 
-						player.getCapability(SizeCapability.CAPABILITY, null).scale);
-				GlStateManager.translate((event.getX() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getX(), 
-						(event.getY() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getY(), 
-						(event.getZ() / player.getCapability(SizeCapability.CAPABILITY, null).scale) - event.getZ());
-			}
+			float scale = player.height / 1.8F;
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.translate((event.getX() / scale) - event.getX(), 
+					(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
 		}
 	}
 	
