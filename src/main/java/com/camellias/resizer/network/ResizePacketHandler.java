@@ -2,6 +2,7 @@ package com.camellias.resizer.network;
 
 import com.camellias.resizer.Reference;
 import com.camellias.resizer.network.packets.GrowthPacket;
+import com.camellias.resizer.network.packets.NormalSizePacket;
 import com.camellias.resizer.network.packets.ShrinkingPacket;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -25,6 +26,8 @@ public class ResizePacketHandler
 		INSTANCE.registerMessage(GrowthPacket.GrowthPacketHandler.class, GrowthPacket.class, next(), Side.CLIENT);
 		INSTANCE.registerMessage(ShrinkingPacket.ShrinkingPacketHandler.class, ShrinkingPacket.class, next(), Side.SERVER);
 		INSTANCE.registerMessage(ShrinkingPacket.ShrinkingPacketHandler.class, ShrinkingPacket.class, next(), Side.CLIENT);
+		INSTANCE.registerMessage(NormalSizePacket.ShrinkingPacketHandler.class, NormalSizePacket.class, next(), Side.SERVER);
+		INSTANCE.registerMessage(NormalSizePacket.ShrinkingPacketHandler.class, NormalSizePacket.class, next(), Side.CLIENT);
 	}
 	
 	public static int next()

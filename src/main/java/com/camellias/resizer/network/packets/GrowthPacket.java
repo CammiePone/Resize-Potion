@@ -18,6 +18,8 @@ public class GrowthPacket implements IMessage
 	}
 	
 	public int playerID;
+	public int duration;
+	public int amplifier;
 	
 	public GrowthPacket(EntityPlayer player)
 	{
@@ -49,7 +51,7 @@ public class GrowthPacket implements IMessage
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
-					player.addPotionEffect(new PotionEffect(Main.GROWTH));
+					player.addPotionEffect(new PotionEffect(Main.GROWTH, message.duration, message.amplifier));
 				}
 			});
 			

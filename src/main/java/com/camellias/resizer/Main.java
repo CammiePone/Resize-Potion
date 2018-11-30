@@ -43,7 +43,7 @@ public class Main
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		ModPotionTypes.registerPotionTypes();
 		
-		MinecraftForge.EVENT_BUS.register(PotionHandler.class);
+		MinecraftForge.EVENT_BUS.register(new PotionHandler());
 		
 		ResizePacketHandler.init();
 	}

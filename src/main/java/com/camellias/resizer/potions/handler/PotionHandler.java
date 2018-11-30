@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.camellias.resizer.Main;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.network.packets.GrowthPacket;
+import com.camellias.resizer.network.packets.NormalSizePacket;
 import com.camellias.resizer.network.packets.ShrinkingPacket;
 
 import net.minecraft.client.model.ModelPlayer;
@@ -30,11 +31,12 @@ public class PotionHandler
 {
 	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
 	public static UUID uuid = UUID.fromString("e9cb6e24-46e5-45ce-97e7-6c1664aed7f9");
-	public static boolean potionEffectGrowth = false;
-	public static boolean potionEffectShrinking = false;
+	public boolean potionEffectGrowth = false;
+	public boolean potionEffectShrinking = false;
+	public boolean normal = true;
 	
 	@SubscribeEvent
-	public static void trackingEvent(StartTracking event)
+	public void trackingEvent(StartTracking event)
 	{
 		if(event.getEntityPlayer().world != null)
 		{
@@ -43,21 +45,31 @@ public class PotionHandler
 			if(event.getTarget() instanceof EntityPlayer)
 			{
 				EntityPlayer target = (EntityPlayer) event.getTarget();
+				PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
+				PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 				
 				if(!event.getEntityPlayer().world.isRemote && target.isPotionActive(Main.GROWTH))
 				{
-					ResizePacketHandler.INSTANCE.sendTo(new GrowthPacket(target), (EntityPlayerMP) player);
+					GrowthPacket growthPacket = new GrowthPacket(target);
+					growthPacket.duration = growth.getDuration();
+					growthPacket.amplifier = growth.getAmplifier();
+					
+					ResizePacketHandler.INSTANCE.sendTo(growthPacket, (EntityPlayerMP) player);
 				}
 				if(!event.getEntityPlayer().world.isRemote && target.isPotionActive(Main.SHRINKING))
 				{
-					ResizePacketHandler.INSTANCE.sendTo(new ShrinkingPacket(target), (EntityPlayerMP) player);
+					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(target);
+					shrinkingPacket.duration = shrinking.getDuration();
+					shrinkingPacket.amplifier = shrinking.getAmplifier();
+					
+					ResizePacketHandler.INSTANCE.sendTo(shrinkingPacket, (EntityPlayerMP) player);
 				}
 			}
 		}
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	public void onPlayerUpdate(TickEvent.PlayerTickEvent event)
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
@@ -84,10 +96,19 @@ public class PotionHandler
 			{
 				if(player.world.isRemote)
 				{
-					ResizePacketHandler.INSTANCE.sendToAllTracking(new GrowthPacket(player), player);
+					GrowthPacket growthPacket = new GrowthPacket(player);
+					growthPacket.duration = growth.getDuration();
+					growthPacket.amplifier = growth.getAmplifier();
+					
+					ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
 				}
 				
 				potionEffectGrowth = true;
+			}
+			
+			if(normal == true)
+			{
+				normal = false;
 			}
 			
 			try
@@ -110,7 +131,8 @@ public class PotionHandler
 			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
             		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
-		else
+		
+		if(player.isPotionActive(Main.GROWTH) == false)
 		{
 			if(potionEffectGrowth == true)
 			{
@@ -134,10 +156,19 @@ public class PotionHandler
 			{
 				if(player.world.isRemote)
 				{
-					ResizePacketHandler.INSTANCE.sendToAllTracking(new ShrinkingPacket(player), player);
+					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player);
+					shrinkingPacket.duration = shrinking.getDuration();
+					shrinkingPacket.amplifier = shrinking.getAmplifier();
+					
+					ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
 				}
 				
 				potionEffectShrinking = true;
+			}
+			
+			if(normal == true)
+			{
+				normal = false;
 			}
 			
 			try
@@ -160,7 +191,8 @@ public class PotionHandler
 			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
             		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
-		else
+		
+		if(player.isPotionActive(Main.SHRINKING) == false)
 		{
 			if(potionEffectShrinking == true)
 			{
@@ -172,11 +204,18 @@ public class PotionHandler
 		{
 			player.eyeHeight = player.getDefaultEyeHeight();
 			player.stepHeight = 0.6F;
+			
+			if(normal == false)
+			{
+				ResizePacketHandler.INSTANCE.sendToAllTracking(new NormalSizePacket(player), player);
+				
+				normal = true;
+			}
 		}
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerJump(LivingJumpEvent event)
+	public void onPlayerJump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
@@ -206,34 +245,24 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+	public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
 	{
 		//----Thank you Melonslise from the MMD Discord for helping getting the rendering working properly.----//
 		
 		EntityPlayer player = event.getEntityPlayer();
-		ModelPlayer model = event.getRenderer().getMainModel();
-		PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
-		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 		
-		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
-		{
-			float scale = player.height / 1.8F;
-			
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(scale, scale, scale);
-			GlStateManager.translate((event.getX() / scale) - event.getX(), 
-					(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
-		}
+		float scale = player.height / 1.8F;
+		
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.translate((event.getX() / scale) - event.getX(), 
+				(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onPlayerRenderPost(RenderPlayerEvent.Post event)
+	public void onPlayerRenderPost(RenderPlayerEvent.Post event)
 	{
-		if(event.getEntityPlayer().isPotionActive(Main.GROWTH) || 
-				event.getEntityPlayer().isPotionActive(Main.SHRINKING))
-		{
-			GlStateManager.popMatrix();
-		}
+		GlStateManager.popMatrix();
 	}
 }
