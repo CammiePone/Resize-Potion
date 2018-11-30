@@ -47,15 +47,15 @@ public class ModPotionTypes
 		PotionHelper.addMix(PotionTypes.THICK, Item.getItemFromBlock(Blocks.BROWN_MUSHROOM), SHRINKING);
 		PotionHelper.addMix(SHRINKING, Items.REDSTONE, LONG_SHRINKING);
 		PotionHelper.addMix(STRONG_SHRINKING, Items.REDSTONE, LONG_SHRINKING);
-		PotionHelper.addMix(SHRINKING, Items.REDSTONE, STRONG_SHRINKING);
-		PotionHelper.addMix(LONG_SHRINKING, Items.REDSTONE, STRONG_SHRINKING);
+		PotionHelper.addMix(SHRINKING, Items.GLOWSTONE_DUST, STRONG_SHRINKING);
+		PotionHelper.addMix(LONG_SHRINKING, Items.GLOWSTONE_DUST, STRONG_SHRINKING);
 		
 		PotionHelper.addMix(PotionTypes.MUNDANE, Item.getItemFromBlock(Blocks.RED_MUSHROOM), GROWTH);
 		PotionHelper.addMix(PotionTypes.AWKWARD, Item.getItemFromBlock(Blocks.RED_MUSHROOM), GROWTH);
 		PotionHelper.addMix(PotionTypes.THICK, Item.getItemFromBlock(Blocks.RED_MUSHROOM), GROWTH);
 		PotionHelper.addMix(GROWTH, Items.REDSTONE, LONG_GROWTH);
 		PotionHelper.addMix(STRONG_GROWTH, Items.REDSTONE, LONG_GROWTH);
-		PotionHelper.addMix(GROWTH, Items.REDSTONE, STRONG_GROWTH);
-		PotionHelper.addMix(LONG_GROWTH, Items.REDSTONE, STRONG_GROWTH);
+		PotionHelper.addMix(GROWTH, Items.GLOWSTONE_DUST, STRONG_GROWTH);
+		PotionHelper.addMix(LONG_GROWTH, Items.GLOWSTONE_DUST, STRONG_GROWTH);
 	}
 }
