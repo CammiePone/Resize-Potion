@@ -1,19 +1,12 @@
 package com.camellias.resizer.network.packets;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.camellias.resizer.Main;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class NormalSizePacket implements IMessage
 {
@@ -22,7 +15,6 @@ public class NormalSizePacket implements IMessage
 		
 	}
 	
-	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
 	public int playerID;
 	
 	public NormalSizePacket(EntityPlayer player)

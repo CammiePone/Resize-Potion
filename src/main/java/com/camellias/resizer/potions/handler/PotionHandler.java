@@ -10,7 +10,6 @@ import com.camellias.resizer.network.packets.GrowthPacket;
 import com.camellias.resizer.network.packets.NormalSizePacket;
 import com.camellias.resizer.network.packets.ShrinkingPacket;
 
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,6 +30,8 @@ public class PotionHandler
 {
 	public static Method setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
 	public static UUID uuid = UUID.fromString("e9cb6e24-46e5-45ce-97e7-6c1664aed7f9");
+	public static boolean playerGrown = false;
+	public static boolean playerShrunk = false;
 	
 	@SubscribeEvent
 	public void trackingEvent(StartTracking event)
@@ -89,13 +90,17 @@ public class PotionHandler
 				player.removePotionEffect(Main.SHRINKING);
 			}
 			
-			if(player.world.isRemote && player.ticksExisted % 20 == 0)
+			if(playerGrown == false)
 			{
-				GrowthPacket growthPacket = new GrowthPacket(player);
-				growthPacket.duration = growth.getDuration();
-				growthPacket.amplifier = growth.getAmplifier();
-				
-				ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
+				if(player.world.isRemote && player.ticksExisted % 20 == 0)
+				{
+					GrowthPacket growthPacket = new GrowthPacket(player);
+					growthPacket.duration = growth.getDuration();
+					growthPacket.amplifier = growth.getAmplifier();
+					
+					playerGrown = true;
+					ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
+				}
 			}
 			
 			try
@@ -118,6 +123,10 @@ public class PotionHandler
 			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
             		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
+		else
+		{
+			playerGrown = false;
+		}
 		
 		if(player.isPotionActive(Main.SHRINKING))
 		{
@@ -131,13 +140,17 @@ public class PotionHandler
 			player.jumpMovementFactor *= 1.75F;
 			player.fallDistance = 0.0F;
 			
-			if(player.world.isRemote && player.ticksExisted % 20 == 0)
+			if(playerShrunk == false)
 			{
-				ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player);
-				shrinkingPacket.duration = shrinking.getDuration();
-				shrinkingPacket.amplifier = shrinking.getAmplifier();
-				
-				ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+				if(player.world.isRemote && player.ticksExisted % 20 == 0)
+				{
+					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player);
+					shrinkingPacket.duration = shrinking.getDuration();
+					shrinkingPacket.amplifier = shrinking.getAmplifier();
+					
+					playerShrunk = true;
+					ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+				}
 			}
 			
 			try
@@ -160,15 +173,24 @@ public class PotionHandler
 			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
             		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
 		}
+		else
+		{
+			playerShrunk = false;
+		}
 		
 		if(player.isPotionActive(Main.GROWTH) == false && player.isPotionActive(Main.SHRINKING) == false)
 		{
 			player.eyeHeight = player.getDefaultEyeHeight();
 			player.stepHeight = 0.6F;
 			
-			if(player.ticksExisted % 20 == 0)
+			if(playerGrown == false && playerShrunk == false)
 			{
-				ResizePacketHandler.INSTANCE.sendToAllTracking(new NormalSizePacket(player), player);
+				if(player.ticksExisted % 40 == 0 && player.world.isRemote)
+				{
+					NormalSizePacket normalSizePacket = new NormalSizePacket(player);
+					
+					ResizePacketHandler.INSTANCE.sendToAllTracking(normalSizePacket, player);
+				}
 			}
 		}
 	}
