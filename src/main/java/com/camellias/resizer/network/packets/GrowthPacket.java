@@ -51,6 +51,7 @@ public class GrowthPacket implements IMessage
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
+					player.removePotionEffect(Main.SHRINKING);
 					player.addPotionEffect(new PotionEffect(Main.GROWTH, message.duration, message.amplifier));
 				}
 			});

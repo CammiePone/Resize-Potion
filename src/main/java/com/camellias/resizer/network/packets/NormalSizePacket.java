@@ -54,31 +54,9 @@ public class NormalSizePacket implements IMessage
 				if(Main.proxy.getPlayer(ctx) != null)
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
-					AxisAlignedBB aabb = player.getEntityBoundingBox();
 					
-					player.height = 1.8F;
-					player.width = 0.6F;
-					double d0 = (double)player.width / 2.0D;
-					
-					try
-					{
-						setSize.invoke(player, player.width, player.height);
-					}
-					catch (IllegalAccessException e)
-					{
-						e.printStackTrace();
-					}
-					catch (IllegalArgumentException e)
-					{
-						e.printStackTrace();
-					}
-					catch (InvocationTargetException e)
-					{
-						e.printStackTrace();
-					}
-					
-					player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
-		            		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
+					player.removePotionEffect(Main.GROWTH);
+					player.removePotionEffect(Main.SHRINKING);
 				}
 			});
 			

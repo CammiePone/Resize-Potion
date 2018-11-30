@@ -51,6 +51,7 @@ public class ShrinkingPacket implements IMessage
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
+					player.removePotionEffect(Main.GROWTH);
 					player.addPotionEffect(new PotionEffect(Main.SHRINKING, message.duration, message.amplifier));
 				}
 			});
