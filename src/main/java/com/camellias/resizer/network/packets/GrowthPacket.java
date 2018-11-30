@@ -50,8 +50,6 @@ public class GrowthPacket implements IMessage
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
 					player.addPotionEffect(new PotionEffect(Main.GROWTH));
-					
-					player.sendMessage(new TextComponentString("Have a packet!"));
 				}
 			});
 			

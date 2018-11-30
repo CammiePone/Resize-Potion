@@ -36,21 +36,21 @@ public class PotionHandler
 	@SubscribeEvent
 	public static void trackingEvent(StartTracking event)
 	{
-		if(event.getEntityPlayer().world != null && !event.getEntityPlayer().world.isRemote)
+		if(event.getEntityPlayer().world != null)
 		{
-			EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+			EntityPlayer player = event.getEntityPlayer();
 			
-			if(event.getTarget() instanceof EntityPlayerMP)
+			if(event.getTarget() instanceof EntityPlayer)
 			{
-				EntityPlayerMP target = (EntityPlayerMP) event.getTarget();
+				EntityPlayer target = (EntityPlayer) event.getTarget();
 				
-				if(target.isPotionActive(Main.GROWTH))
+				if(!event.getEntityPlayer().world.isRemote && target.isPotionActive(Main.GROWTH))
 				{
-					ResizePacketHandler.INSTANCE.sendTo(new GrowthPacket(target), player);
+					ResizePacketHandler.INSTANCE.sendTo(new GrowthPacket(target), (EntityPlayerMP) player);
 				}
-				if(target.isPotionActive(Main.SHRINKING))
+				if(!event.getEntityPlayer().world.isRemote && target.isPotionActive(Main.SHRINKING))
 				{
-					ResizePacketHandler.INSTANCE.sendTo(new ShrinkingPacket(target), player);
+					ResizePacketHandler.INSTANCE.sendTo(new ShrinkingPacket(target), (EntityPlayerMP) player);
 				}
 			}
 		}
@@ -80,15 +80,14 @@ public class PotionHandler
 				player.removePotionEffect(Main.SHRINKING);
 			}
 			
-			if(!player.world.isRemote)
+			if(potionEffectGrowth == false)
 			{
-				if(potionEffectGrowth == false)
+				if(player.world.isRemote)
 				{
-					EntityPlayerMP playerMP = (EntityPlayerMP) player;
-					
-					ResizePacketHandler.INSTANCE.sendToAllTracking(new GrowthPacket(playerMP), playerMP);
-					potionEffectGrowth = true;
+					ResizePacketHandler.INSTANCE.sendToAllTracking(new GrowthPacket(player), player);
 				}
+				
+				potionEffectGrowth = true;
 			}
 			
 			try
@@ -131,15 +130,14 @@ public class PotionHandler
 			player.jumpMovementFactor *= 1.75F;
 			player.fallDistance = 0.0F;
 			
-			if(!player.world.isRemote)
+			if(potionEffectShrinking == false)
 			{
-				if(potionEffectShrinking == false)
+				if(player.world.isRemote)
 				{
-					EntityPlayerMP playerMP = (EntityPlayerMP) player;
-					
-					ResizePacketHandler.INSTANCE.sendToAllTracking(new ShrinkingPacket(playerMP), playerMP);
-					potionEffectShrinking = true;
+					ResizePacketHandler.INSTANCE.sendToAllTracking(new ShrinkingPacket(player), player);
 				}
+				
+				potionEffectShrinking = true;
 			}
 			
 			try
