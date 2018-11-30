@@ -92,14 +92,18 @@ public class PotionHandler
 			
 			if(playerGrown == false)
 			{
-				if(player.world.isRemote && player.ticksExisted % 20 == 0)
+				if(player.ticksExisted % 20 == 0)
 				{
 					GrowthPacket growthPacket = new GrowthPacket(player);
 					growthPacket.duration = growth.getDuration();
 					growthPacket.amplifier = growth.getAmplifier();
 					
 					playerGrown = true;
-					ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
+					
+					if(player.world.isRemote)
+					{
+						ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
+					}
 				}
 			}
 			
@@ -142,14 +146,18 @@ public class PotionHandler
 			
 			if(playerShrunk == false)
 			{
-				if(player.world.isRemote && player.ticksExisted % 20 == 0)
+				if(player.ticksExisted % 20 == 0)
 				{
 					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player);
 					shrinkingPacket.duration = shrinking.getDuration();
 					shrinkingPacket.amplifier = shrinking.getAmplifier();
 					
 					playerShrunk = true;
-					ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+					
+					if(player.world.isRemote)
+					{
+						ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+					}
 				}
 			}
 			
