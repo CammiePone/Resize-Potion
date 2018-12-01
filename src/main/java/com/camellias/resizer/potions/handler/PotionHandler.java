@@ -224,18 +224,26 @@ public class PotionHandler
 		
 		EntityPlayer player = event.getEntityPlayer();
 		
-		float scale = player.height / 1.8F;
-		
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.translate((event.getX() / scale) - event.getX(), 
-				(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
+		{
+			float scale = player.height / 1.8F;
+			
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(scale, scale, scale);
+			GlStateManager.translate((event.getX() / scale) - event.getX(), 
+					(event.getY() / scale) - event.getY(), (event.getZ() / scale) - event.getZ());
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerRenderPost(RenderPlayerEvent.Post event)
 	{
-		GlStateManager.popMatrix();
+		EntityPlayer player = event.getEntityPlayer();
+		
+		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
+		{
+			GlStateManager.popMatrix();
+		}
 	}
 }
