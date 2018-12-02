@@ -2,7 +2,6 @@ package com.camellias.resizer.potions.handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 import com.camellias.resizer.Main;
 import com.camellias.resizer.network.ResizePacketHandler;
@@ -21,6 +20,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -96,6 +96,22 @@ public class PotionHandler
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			
 			if(event.getPotion() == Main.GROWTH || event.getPotion() == Main.SHRINKING)
+			{
+				NormalSizePacket normalSizePacket = new NormalSizePacket(player);
+				
+				ResizePacketHandler.INSTANCE.sendToAllTracking(normalSizePacket, player);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPotionEnd(PotionExpiryEvent event)
+	{
+		if(event.getEntityLiving() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			
+			if(event.getPotionEffect().getPotion() == Main.GROWTH || event.getPotionEffect().getPotion() == Main.SHRINKING)
 			{
 				NormalSizePacket normalSizePacket = new NormalSizePacket(player);
 				
