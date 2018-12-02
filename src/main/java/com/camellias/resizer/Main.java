@@ -1,5 +1,8 @@
 package com.camellias.resizer;
 
+import java.io.File;
+
+import com.camellias.resizer.init.ModConfig;
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.potions.PotionGrowth;
@@ -26,6 +29,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 	dependencies = Reference.DEPENDENCIES)
 public class Main 
 {
+	public static File config;
+	
 	public static final Potion SHRINKING = new PotionShrinking("shrinking");
 	public static final Potion GROWTH = new PotionGrowth("growth");
 	
@@ -46,6 +51,7 @@ public class Main
 		MinecraftForge.EVENT_BUS.register(new PotionHandler());
 		
 		ResizePacketHandler.init();
+		ModConfig.registerConfig(event);
 	}
 	
 	@EventHandler

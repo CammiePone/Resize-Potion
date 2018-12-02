@@ -8,16 +8,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class NormalSizePacket implements IMessage
+public class NormalSizePacket2 implements IMessage
 {
-	public NormalSizePacket()
+	public NormalSizePacket2()
 	{
 		
 	}
 	
 	public int playerID;
 	
-	public NormalSizePacket(EntityPlayer player)
+	public NormalSizePacket2(EntityPlayer player)
 	{
 		this.playerID = player.getEntityId();
 	}
@@ -36,10 +36,10 @@ public class NormalSizePacket implements IMessage
 	
 //-------------------------------------------------------------------------------------------------------------------------//
 	
-	public static class GrowthPacketHandler implements IMessageHandler<NormalSizePacket, IMessage>
+	public static class ShrinkingPacketHandler implements IMessageHandler<NormalSizePacket2, IMessage>
 	{
 		@Override
-		public IMessage onMessage(NormalSizePacket message, MessageContext ctx)
+		public IMessage onMessage(NormalSizePacket2 message, MessageContext ctx)
 		{
 			Main.proxy.getThreadListener(ctx).addScheduledTask(() ->
 			{
@@ -47,7 +47,6 @@ public class NormalSizePacket implements IMessage
 				{
 					EntityPlayer player = (EntityPlayer) Main.proxy.getPlayer(ctx).world.getEntityByID(message.playerID);
 					
-					player.removePotionEffect(Main.GROWTH);
 					player.removePotionEffect(Main.SHRINKING);
 				}
 			});
