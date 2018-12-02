@@ -33,7 +33,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PotionHandler
 {
 	public static Method setSize = ObfuscationReflectionHelper.findMethod(Entity.class, "func_70105_a", void.class, float.class, float.class);
-	public static UUID uuid = UUID.fromString("e9cb6e24-46e5-45ce-97e7-6c1664aed7f9");
 	
 	@SubscribeEvent
 	public void trackingEvent(StartTracking event)
@@ -190,7 +189,7 @@ public class PotionHandler
 		if(player.isPotionActive(Main.SHRINKING))
 		{
 			player.height = 0.9F / (shrinking.getAmplifier() + 1);
-			player.width = player.height * (1F / 3F);
+			player.width = player.height * (1F / 2F);
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
 			
