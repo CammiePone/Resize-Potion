@@ -205,7 +205,7 @@ public class PotionHandler
 		if(player.isPotionActive(Main.SHRINKING))
 		{
 			player.height = 0.9F / (shrinking.getAmplifier() + 1);
-			player.width = player.height * (1F / 2F);
+			player.width = 0.35F;
 			AxisAlignedBB aabb = player.getEntityBoundingBox();
 			double d0 = (double)player.width / 2.0D;
 			
@@ -229,6 +229,25 @@ public class PotionHandler
 			catch (InvocationTargetException e)
 			{
 				e.printStackTrace();
+			}
+			
+			if(shrinking.getAmplifier() >= 1)
+			{
+				if((ClimbingHandler.canClimb(player) != false))
+				{
+					if(player.collidedHorizontally)
+                    {
+						if(!player.isSneaking())
+                        {
+                            player.motionY = 0.1F;
+                        }
+                        
+                        if(player.isSneaking())
+                        {
+                            player.motionY = 0.0F;
+                        }
+                    }
+				}
 			}
 			
 			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
