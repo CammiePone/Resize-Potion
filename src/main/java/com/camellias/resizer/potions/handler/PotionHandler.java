@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.camellias.resizer.Main;
+import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.network.packets.GrowthPacket;
 import com.camellias.resizer.network.packets.NormalSizePacket;
@@ -15,14 +16,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,12 +34,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@EventBusSubscriber
 public class PotionHandler
 {
 	public static Method setSize = ObfuscationReflectionHelper.findMethod(Entity.class, "func_70105_a", void.class, float.class, float.class);
 	
 	@SubscribeEvent
-	public void trackingEvent(StartTracking event)
+	public static void trackingEvent(StartTracking event)
 	{
 		if(event.getEntityPlayer().world != null)
 		{
@@ -64,7 +69,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void onPotionAdded(PotionAddedEvent event)
+	public static void onPotionAdded(PotionAddedEvent event)
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
@@ -89,7 +94,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void onPotionRemoved(PotionRemoveEvent event)
+	public static void onPotionRemoved(PotionRemoveEvent event)
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
@@ -105,7 +110,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void onPotionEnd(PotionExpiryEvent event)
+	public static void onPotionEnd(PotionExpiryEvent event)
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
@@ -121,7 +126,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void isPotionApplicable(PotionApplicableEvent event)
+	public static void isPotionApplicable(PotionApplicableEvent event)
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
@@ -163,7 +168,7 @@ public class PotionHandler
 	
 	
 	@SubscribeEvent
-	public void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
@@ -262,7 +267,7 @@ public class PotionHandler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerJump(LivingJumpEvent event)
+	public static void onPlayerJump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
@@ -292,7 +297,7 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event)
 	{
 		//----Thank you Melonslise from the MMD Discord for helping getting the rendering working properly.----//
 		
@@ -311,7 +316,7 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void onPlayerRenderPost(RenderPlayerEvent.Post event)
+	public static void onPlayerRenderPost(RenderPlayerEvent.Post event)
 	{
 		EntityPlayer player = event.getEntityPlayer();
 		

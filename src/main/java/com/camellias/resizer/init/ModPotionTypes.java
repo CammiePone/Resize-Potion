@@ -2,19 +2,27 @@ package com.camellias.resizer.init;
 
 import com.camellias.resizer.Main;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+@EventBusSubscriber
 public class ModPotionTypes
 {
-	//-----------------------------------------------------------------------------------------------------------------------//
+	@SubscribeEvent
+	public static void onPotionRegister(RegistryEvent.Register<PotionType> event)
+	{
+		registerPotionTypes();
+	}
+	
+//-----------------------------------------------------------------------------------------------------------------------//
 	
 	public static final PotionType SHRINKING = new PotionType("shrinking", 
 			new PotionEffect[]{new PotionEffect(Main.SHRINKING, 4800)}).setRegistryName("shrinking");

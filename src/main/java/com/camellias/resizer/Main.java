@@ -46,9 +46,6 @@ public class Main
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
-		ModPotionTypes.registerPotionTypes();
-		
-		MinecraftForge.EVENT_BUS.register(new PotionHandler());
 		
 		ResizePacketHandler.init();
 		ModConfig.registerConfig(event);
@@ -63,6 +60,6 @@ public class Main
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+		//ModPotionTypes.registerPotionTypes();
 	}
 }
