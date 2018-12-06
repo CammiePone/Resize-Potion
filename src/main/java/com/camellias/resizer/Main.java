@@ -2,16 +2,12 @@ package com.camellias.resizer;
 
 import java.io.File;
 
-import com.camellias.resizer.init.ModConfig;
-import com.camellias.resizer.init.ModPotionTypes;
-import com.camellias.resizer.network.ResizePacketHandler;
-import com.camellias.resizer.potions.PotionGrowth;
-import com.camellias.resizer.potions.PotionShrinking;
-import com.camellias.resizer.potions.handler.PotionHandler;
+import com.camellias.resizer.common.potions.PotionGrowth;
+import com.camellias.resizer.common.potions.PotionShrinking;
+import com.camellias.resizer.handlers.RegistryHandler;
 import com.camellias.resizer.proxy.CommonProxy;
 
 import net.minecraft.potion.Potion;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -47,8 +43,7 @@ public class Main
 	{
 		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
 		
-		ResizePacketHandler.init();
-		ModConfig.registerConfig(event);
+		RegistryHandler.preInitRegistries(event);
 	}
 	
 	@EventHandler
@@ -60,6 +55,6 @@ public class Main
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		//ModPotionTypes.registerPotionTypes();
+		
 	}
 }

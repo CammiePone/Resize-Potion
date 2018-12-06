@@ -1,3 +1,7 @@
+item.inert_bauble.name=Empty Trinket
+item.shrinking_bauble.name=Shrinking Trinket
+item.growth_bauble.name=Growth Trinket
+
 potion.effect.shrinking=Potion of Resizing
 potion.effect.growth=Potion of Resizing
 splash_potion.effect.shrinking=Splash Potion of Resizing
@@ -9,3 +13,13 @@ tipped_arrow.effect.growth=Arrow of Growth
 
 effect.shrinking=Shrinking
 effect.growth=Growth
+
+shrinking.info=Potion of Shrinking
+growth.info=Potion of Growth
+shift.prompt=<<Press SHIFT For More Info>>
+item.inert_bauble.info1=Use when the Shrinking or
+item.inert_bauble.info2=Growth potions are active.
+item.shrinking_bauble.info1= - Shrinks the player down
+item.shrinking_bauble.info2=    to 50%% their height.
+item.growth_bauble.info1= - Grows the player up
+item.growth_bauble.info2=    to 150%% their height.

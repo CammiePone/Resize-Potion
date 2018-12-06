@@ -13,15 +13,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-@EventBusSubscriber
 public class ModPotionTypes
 {
-	@SubscribeEvent
-	public static void onPotionRegister(RegistryEvent.Register<PotionType> event)
-	{
-		registerPotionTypes();
-	}
-	
 //-----------------------------------------------------------------------------------------------------------------------//
 	
 	public static final PotionType SHRINKING = new PotionType("shrinking", 

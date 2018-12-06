@@ -1,4 +1,4 @@
-package com.camellias.resizer.potions.handler;
+package com.camellias.resizer.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

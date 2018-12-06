@@ -1,4 +1,4 @@
-package com.camellias.resizer.potions;
+package com.camellias.resizer.common.potions;
 
 import java.util.UUID;
 

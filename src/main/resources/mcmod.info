@@ -3,7 +3,7 @@
   "modid": "resize",
   "name": "Resizing Potion",
   "description": "It adds 2 potions to resize the player.",
-  "version": "r1.4",
+  "version": "r1.6",
   "mcversion": "1.12.2",
   "url": "",
   "updateUrl": "",

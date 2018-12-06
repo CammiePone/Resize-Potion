@@ -1,4 +1,4 @@
-package com.camellias.resizer.potions.handler;
+package com.camellias.resizer.handlers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPane;
