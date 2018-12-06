@@ -30,11 +30,14 @@ public class RegistryHandler
 	@SubscribeEvent
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
-		for(Item item : ModItems.ITEMS)
+		if(Loader.isModLoaded("baubles"))
 		{
-			if(item instanceof IHasModel)
+			for(Item item : ModItems.ITEMS)
 			{
-				((IHasModel)item).registerModels();
+				if(item instanceof IHasModel)
+				{
+					((IHasModel)item).registerModels();
+				}
 			}
 		}
 	}
