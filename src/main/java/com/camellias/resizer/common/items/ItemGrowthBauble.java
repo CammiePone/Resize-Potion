@@ -32,10 +32,6 @@ public class ItemGrowthBauble extends ItemBauble implements IBauble
 	{
 		if(player.ticksExisted % 10 == 0)
 		{
-			player.addPotionEffect(new PotionEffect(Main.SHRINKING, 20, 0, true, false));
-		}
-		if(player.ticksExisted % 10 == 0)
-		{
 			player.addPotionEffect(new PotionEffect(Main.GROWTH, 20, 0, true, false));
 		}
 	}

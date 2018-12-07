@@ -19,7 +19,20 @@ growth.info=Potion of Growth
 shift.prompt=<<Press SHIFT For More Info>>
 item.inert_bauble.info1=Use when the Shrinking or
 item.inert_bauble.info2=Growth potions are active.
+
 item.shrinking_bauble.info1= - Shrinks the player down
 item.shrinking_bauble.info2=    to 50%% their height.
+item.shrinking_bauble.speed=+50%% Speed
+item.shrinking_bauble.attackspeed=+50%% Attack Speed
+item.shrinking_bauble.jumpheight=+250%% Jump Height
+item.shrinking_bauble.attackdamage=-25%% Attack Damage
+item.shrinking_bauble.knockbackresist=-50%% Knockback Resistance
+item.shrinking_bauble.stepheight=-25%% Step Height
+
 item.growth_bauble.info1= - Grows the player up
 item.growth_bauble.info2=    to 150%% their height.
+item.growth_bauble.attackdamage=+50%% Attack Damage
+item.growth_bauble.knockbackresist=+50%% Knockback Resistance
+item.growth_bauble.stepheight=+25%% Step Height
+item.growth_bauble.speed=-20%% Speed
+item.growth_bauble.attackspeed=-30%% Attack Speed

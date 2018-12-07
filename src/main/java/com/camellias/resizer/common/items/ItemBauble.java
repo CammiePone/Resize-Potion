@@ -42,9 +42,10 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		String shrinking = new String(TextFormatting.DARK_AQUA + I18n.format("shrinking.info"));
-		String growth = new String(TextFormatting.GOLD + I18n.format("growth.info"));
-		String shift = new String(TextFormatting.YELLOW + I18n.format("shift.prompt"));
+		String shrinking = TextFormatting.DARK_AQUA + I18n.format("shrinking.info");
+		String growth = TextFormatting.GOLD + I18n.format("growth.info");
+		String shift = TextFormatting.YELLOW + I18n.format("shift.prompt");
+		String space = " ";
 		Item item = stack.getItem();
 		
 		if(item instanceof ItemShrinkingBauble)
@@ -52,12 +53,31 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 			String info1 = TextFormatting.AQUA + I18n.format(item.getTranslationKey() + ".info1");
 			String info2 = TextFormatting.AQUA + I18n.format(item.getTranslationKey() + ".info2");
 			
+			String speed = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".speed");
+			String attackspeed = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".attackspeed");
+			String jumpheight = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".jumpheight");
+			
+			String attackdamage = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".attackdamage");
+			String knockbackresist = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".knockbackresist");
+			String stepheight = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".stepheight");
+			
+			tooltip.add(space);
 			tooltip.add(shrinking);
 			
 			if(GuiScreen.isShiftKeyDown())
 			{
 				tooltip.add(info1);
 				tooltip.add(info2);
+				
+				tooltip.add(space);
+				
+				tooltip.add(speed);
+				tooltip.add(attackspeed);
+				tooltip.add(jumpheight);
+				
+				tooltip.add(attackdamage);
+				tooltip.add(knockbackresist);
+				tooltip.add(stepheight);
 			}
 			else
 			{
@@ -69,12 +89,29 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 			String info1 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info1");
 			String info2 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info2");
 			
+			String attackdamage = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".attackdamage");
+			String knockbackresist = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".knockbackresist");
+			String stepheight = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".stepheight");
+			
+			String speed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".speed");
+			String attackspeed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".attackspeed");
+			
+			tooltip.add(space);
 			tooltip.add(growth);
 			
 			if(GuiScreen.isShiftKeyDown())
 			{
 				tooltip.add(info1);
 				tooltip.add(info2);
+				
+				tooltip.add(space);
+				
+				tooltip.add(attackdamage);
+				tooltip.add(knockbackresist);
+				tooltip.add(stepheight);
+				
+				tooltip.add(speed);
+				tooltip.add(attackspeed);
 			}
 			else
 			{
@@ -85,6 +122,8 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 		{
 			String info1 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info1");
 			String info2 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info2");
+			
+			tooltip.add(space);
 			
 			if(GuiScreen.isShiftKeyDown())
 			{
