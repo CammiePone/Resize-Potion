@@ -26,7 +26,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 public class Main 
 {
 	public static File config;
-	
 	public static final Potion SHRINKING = new PotionShrinking("shrinking");
 	public static final Potion GROWTH = new PotionGrowth("growth");
 	
@@ -41,8 +40,6 @@ public class Main
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		ForgeRegistries.POTIONS.registerAll(SHRINKING, GROWTH);
-		
 		RegistryHandler.preInitRegistries(event);
 	}
 	

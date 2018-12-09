@@ -22,7 +22,7 @@ public class ModConfig
 		String category;
 		
 		category = "Potion Recipe Item";
-		config.addCustomCategoryComment(category, "Change the items used to brew the potions");
+		config.addCustomCategoryComment(category, "Change the items used to brew the potions.");
 		
 		shrinkingIngredient = config.getString("Ingredient for the Shrinking Potion", category, "minecraft:brown_mushroom", "");
 		growthIngredient = config.getString("Ingredient for the Growth Potion", category, "minecraft:red_mushroom", "");

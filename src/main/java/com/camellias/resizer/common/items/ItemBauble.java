@@ -3,6 +3,7 @@ package com.camellias.resizer.common.items;
 import java.util.List;
 
 import com.camellias.resizer.Main;
+import com.camellias.resizer.init.ModConfig;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.util.IHasModel;
 
@@ -45,6 +46,7 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 		String shrinking = TextFormatting.DARK_AQUA + I18n.format("shrinking.info");
 		String growth = TextFormatting.GOLD + I18n.format("growth.info");
 		String shift = TextFormatting.YELLOW + I18n.format("shift.prompt");
+		String whenworn = TextFormatting.DARK_PURPLE + I18n.format("whenworn.string");
 		String space = " ";
 		Item item = stack.getItem();
 		
@@ -61,7 +63,6 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 			String knockbackresist = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".knockbackresist");
 			String stepheight = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".stepheight");
 			
-			tooltip.add(space);
 			tooltip.add(shrinking);
 			
 			if(GuiScreen.isShiftKeyDown())
@@ -70,7 +71,7 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 				tooltip.add(info2);
 				
 				tooltip.add(space);
-				
+				tooltip.add(whenworn);
 				tooltip.add(speed);
 				tooltip.add(attackspeed);
 				tooltip.add(jumpheight);
@@ -96,7 +97,6 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 			String speed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".speed");
 			String attackspeed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".attackspeed");
 			
-			tooltip.add(space);
 			tooltip.add(growth);
 			
 			if(GuiScreen.isShiftKeyDown())
@@ -105,7 +105,7 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 				tooltip.add(info2);
 				
 				tooltip.add(space);
-				
+				tooltip.add(whenworn);
 				tooltip.add(attackdamage);
 				tooltip.add(knockbackresist);
 				tooltip.add(stepheight);
@@ -122,8 +122,6 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 		{
 			String info1 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info1");
 			String info2 = TextFormatting.YELLOW + I18n.format(item.getTranslationKey() + ".info2");
-			
-			tooltip.add(space);
 			
 			if(GuiScreen.isShiftKeyDown())
 			{

@@ -17,6 +17,7 @@ effect.growth=Growth
 shrinking.info=Potion of Shrinking
 growth.info=Potion of Growth
 shift.prompt=<<Press SHIFT For More Info>>
+whenworn.string=When Worn:
 item.inert_bauble.info1=Use when the Shrinking or
 item.inert_bauble.info2=Growth potions are active.
 

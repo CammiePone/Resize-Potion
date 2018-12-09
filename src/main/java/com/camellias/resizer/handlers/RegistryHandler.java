@@ -1,5 +1,6 @@
 package com.camellias.resizer.handlers;
 
+import com.camellias.resizer.Main;
 import com.camellias.resizer.init.ModConfig;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.init.ModPotionTypes;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @EventBusSubscriber
 public class RegistryHandler

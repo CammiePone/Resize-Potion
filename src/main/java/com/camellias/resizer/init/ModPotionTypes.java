@@ -41,6 +41,7 @@ public class ModPotionTypes
 	
 	public static void registerPotionTypes()
 	{
+		ForgeRegistries.POTIONS.registerAll(Main.SHRINKING, Main.GROWTH);
 		ForgeRegistries.POTION_TYPES.registerAll(SHRINKING, LONG_SHRINKING, STRONG_SHRINKING,
 				GROWTH, LONG_GROWTH, STRONG_GROWTH);
 		

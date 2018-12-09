@@ -1,8 +1,10 @@
 package com.camellias.resizer.common.items;
 
 import java.util.List;
+import java.util.Random;
 
 import com.camellias.resizer.Main;
+import com.camellias.resizer.init.ModItems;
 
 import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
@@ -17,6 +19,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -25,6 +28,37 @@ public class ItemGrowthBauble extends ItemBauble implements IBauble
 	public ItemGrowthBauble(String name)
 	{
 		super(name);
+	}
+	
+	@Override
+	public boolean canEquip(ItemStack itemstack, EntityLivingBase player)
+	{
+		if(BaublesApi.isBaubleEquipped((EntityPlayer) player, ModItems.SHRINKING_BAUBLE) > -1)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	@Override
+	public void onEquipped(ItemStack itemstack, EntityLivingBase player)
+	{
+		Random rand = new Random();
+		double d2 = rand.nextGaussian() * 0.02D;
+        double d0 = rand.nextGaussian() * 0.02D;
+        double d1 = rand.nextGaussian() * 0.02D;
+        
+        for (int k = 0; k < 40; ++k)
+        {
+			player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
+					player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+					player.posY + (double)(rand.nextFloat() * player.height * 2.0F),
+					player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+					d2, d0, d1);
+        }
 	}
 	
 	@Override

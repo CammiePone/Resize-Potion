@@ -2,9 +2,9 @@ package com.camellias.resizer.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Random;
 
 import com.camellias.resizer.Main;
-import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
 import com.camellias.resizer.network.packets.GrowthPacket;
 import com.camellias.resizer.network.packets.NormalSizePacket;
@@ -16,10 +16,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
@@ -74,6 +73,30 @@ public class PotionHandler
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			Random rand = new Random();
+			double d2 = rand.nextGaussian() * 0.02D;
+            double d0 = rand.nextGaussian() * 0.02D;
+            double d1 = rand.nextGaussian() * 0.02D;
+			
+			if(event.getPotionEffect().getPotion() == Main.SHRINKING)
+			{
+				PotionEffect potion = event.getPotionEffect();
+				ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player, potion.getDuration(), potion.getAmplifier());
+				
+				ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+				
+				if(!potion.getIsAmbient())
+				{
+					for (int k = 0; k < 30; ++k)
+		            {
+						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
+								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+								player.posY + (double)(rand.nextFloat() * player.height),
+								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+								d2, d0, d1);
+		            }
+				}
+			}
 			
 			if(event.getPotionEffect().getPotion() == Main.GROWTH)
 			{
@@ -81,14 +104,18 @@ public class PotionHandler
 				GrowthPacket growthPacket = new GrowthPacket(player, potion.getDuration(), potion.getAmplifier());
 				
 				ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
-			}
-			
-			if(event.getPotionEffect().getPotion() == Main.SHRINKING && player.isPotionActive(Main.GROWTH) == false)
-			{
-				PotionEffect potion = event.getPotionEffect();
-				ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player, potion.getDuration(), potion.getAmplifier());
 				
-				ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
+				if(!potion.getIsAmbient())
+				{
+					for (int k = 0; k < 40; ++k)
+		            {
+						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
+								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+								player.posY + (double)(rand.nextFloat() * player.height * 2.0F),
+								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+								d2, d0, d1);
+		            }
+				}
 			}
 		}
 	}
