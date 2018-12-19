@@ -39,35 +39,6 @@ public class PotionHandler
 	public static Method setSize = ObfuscationReflectionHelper.findMethod(Entity.class, "func_70105_a", void.class, float.class, float.class);
 	
 	@SubscribeEvent
-	public static void trackingEvent(StartTracking event)
-	{
-		if(event.getEntityPlayer().world != null)
-		{
-			EntityPlayer player = event.getEntityPlayer();
-			
-			if(event.getTarget() instanceof EntityPlayer)
-			{
-				EntityPlayer target = (EntityPlayer) event.getTarget();
-				PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
-				PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
-				
-				if(target.isPotionActive(Main.GROWTH))
-				{
-					GrowthPacket growthPacket = new GrowthPacket(target, growth.getDuration(), growth.getAmplifier());
-					
-					ResizePacketHandler.INSTANCE.sendTo(growthPacket, (EntityPlayerMP) player);
-				}
-				if(target.isPotionActive(Main.SHRINKING))
-				{
-					ShrinkingPacket shrinkingPacket = new ShrinkingPacket(target, shrinking.getDuration(), shrinking.getAmplifier());
-					
-					ResizePacketHandler.INSTANCE.sendTo(shrinkingPacket, (EntityPlayerMP) player);
-				}
-			}
-		}
-	}
-	
-	@SubscribeEvent
 	public static void onPotionAdded(PotionAddedEvent event)
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
