@@ -1,7 +1,6 @@
 package com.camellias.resizer.handlers;
 
 import com.camellias.resizer.Main;
-import com.camellias.resizer.init.ModConfig;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.ResizePacketHandler;
@@ -53,6 +52,5 @@ public class RegistryHandler
 	public static void preInitRegistries(FMLPreInitializationEvent event)
 	{
 		ResizePacketHandler.init();
-		ModConfig.registerConfig(event);
 	}
 }
