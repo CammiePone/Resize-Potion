@@ -15,19 +15,10 @@ public class ResizePacketHandler
 	
 	private static int nextId = 0;
 	
-	private ResizePacketHandler()
-	{
-		
-	}
-	
 	public static void init()
 	{
-		INSTANCE.registerMessage(GrowthPacket.GrowthPacketHandler.class, GrowthPacket.class, next(), Side.SERVER);
 		INSTANCE.registerMessage(GrowthPacket.GrowthPacketHandler.class, GrowthPacket.class, next(), Side.CLIENT);
-		INSTANCE.registerMessage(ShrinkingPacket.ShrinkingPacketHandler.class, ShrinkingPacket.class, next(), Side.SERVER);
 		INSTANCE.registerMessage(ShrinkingPacket.ShrinkingPacketHandler.class, ShrinkingPacket.class, next(), Side.CLIENT);
-		
-		INSTANCE.registerMessage(NormalSizePacket.GrowthPacketHandler.class, NormalSizePacket.class, next(), Side.SERVER);
 		INSTANCE.registerMessage(NormalSizePacket.GrowthPacketHandler.class, NormalSizePacket.class, next(), Side.CLIENT);
 	}
 	
