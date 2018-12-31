@@ -1,39 +1,45 @@
 package com.camellias.resizer.init;
 
-import java.io.File;
-
-import com.camellias.resizer.Main;
 import com.camellias.resizer.Reference;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.*;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Config(modid = Reference.MODID, category = "", name = Reference.MODID + "/" + Reference.MODID)
+@LangKey(Reference.MODID + ".config.title")
+@EventBusSubscriber
 public class ModConfig
 {
-	public static Configuration config;
-	
-	public static String shrinkingIngredient = "minecraft:brown_mushroom";
-	public static String growthIngredient = "minecraft:red_mushroom";
-	
-	public static void init(File file)
-	{
-		config = new Configuration(file);
-		
-		String category;
-		
-		category = "Potion Recipe Item";
-		config.addCustomCategoryComment(category, "Change the items used to brew the potions.");
-		
-		shrinkingIngredient = config.getString("Ingredient for the Shrinking Potion", category, "minecraft:brown_mushroom", "");
-		growthIngredient = config.getString("Ingredient for the Growth Potion", category, "minecraft:red_mushroom", "");
-		
-		config.save();
-	}
-	
-	public static void registerConfig(FMLPreInitializationEvent event)
-	{
-		Main.config = new File(event.getModConfigurationDirectory() + "/" + Reference.MODID);
-		Main.config.mkdirs();
-		init(new File(Main.config.getPath(), Reference.MODID + ".cfg"));
-	}
+    private static final String PREFIX = "config." + Reference.MODID;
+
+    @Name("Potion Recipe Item")
+    @Comment("Change the items used to brew the potions")
+    @LangKey(Recipe.PREFIX)
+    public static final Recipe RECIPE = new Recipe();
+
+    public static class Recipe
+    {
+        private static final String PREFIX = ModConfig.PREFIX + ".recipe";
+
+        @Name("Ingredient for the Shrinking Potion")
+        @Comment("default: minecraft:brown_mushroom")
+        @LangKey(PREFIX + ".potion.shrinking")
+        public String shrinkingIngredient = "minecraft:brown_mushroom";
+
+        @Name("Ingredient for the Growth Potion")
+        @Comment("default: minecraft:red_mushroom")
+        @LangKey(PREFIX + ".potion.growth")
+        public String growthIngredient = "minecraft:red_mushroom";
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(OnConfigChangedEvent event)
+    {
+        if (event.getModID().equalsIgnoreCase(Reference.MODID))
+            ConfigManager.sync(Reference.MODID, Type.INSTANCE);
+    }
 }

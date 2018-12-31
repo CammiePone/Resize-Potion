@@ -45,17 +45,19 @@ public class ModPotionTypes
 		ForgeRegistries.POTION_TYPES.registerAll(SHRINKING, LONG_SHRINKING, STRONG_SHRINKING,
 				GROWTH, LONG_GROWTH, STRONG_GROWTH);
 		
-		PotionHelper.addMix(PotionTypes.MUNDANE, Item.getByNameOrId(ModConfig.shrinkingIngredient), SHRINKING);
-		PotionHelper.addMix(PotionTypes.AWKWARD, Item.getByNameOrId(ModConfig.shrinkingIngredient), SHRINKING);
-		PotionHelper.addMix(PotionTypes.THICK, Item.getByNameOrId(ModConfig.shrinkingIngredient), SHRINKING);
+		String shrinking = ModConfig.RECIPE.shrinkingIngredient;
+		PotionHelper.addMix(PotionTypes.MUNDANE, Item.getByNameOrId(shrinking), SHRINKING);
+		PotionHelper.addMix(PotionTypes.AWKWARD, Item.getByNameOrId(shrinking), SHRINKING);
+		PotionHelper.addMix(PotionTypes.THICK, Item.getByNameOrId(shrinking), SHRINKING);
 		PotionHelper.addMix(SHRINKING, Items.REDSTONE, LONG_SHRINKING);
 		PotionHelper.addMix(STRONG_SHRINKING, Items.REDSTONE, LONG_SHRINKING);
 		PotionHelper.addMix(SHRINKING, Items.GLOWSTONE_DUST, STRONG_SHRINKING);
 		PotionHelper.addMix(LONG_SHRINKING, Items.GLOWSTONE_DUST, STRONG_SHRINKING);
 		
-		PotionHelper.addMix(PotionTypes.MUNDANE, Item.getByNameOrId(ModConfig.growthIngredient), GROWTH);
-		PotionHelper.addMix(PotionTypes.AWKWARD, Item.getByNameOrId(ModConfig.growthIngredient), GROWTH);
-		PotionHelper.addMix(PotionTypes.THICK, Item.getByNameOrId(ModConfig.growthIngredient), GROWTH);
+		String growth = ModConfig.RECIPE.growthIngredient;
+		PotionHelper.addMix(PotionTypes.MUNDANE, Item.getByNameOrId(growth), GROWTH);
+		PotionHelper.addMix(PotionTypes.AWKWARD, Item.getByNameOrId(growth), GROWTH);
+		PotionHelper.addMix(PotionTypes.THICK, Item.getByNameOrId(growth), GROWTH);
 		PotionHelper.addMix(GROWTH, Items.REDSTONE, LONG_GROWTH);
 		PotionHelper.addMix(STRONG_GROWTH, Items.REDSTONE, LONG_GROWTH);
 		PotionHelper.addMix(GROWTH, Items.GLOWSTONE_DUST, STRONG_GROWTH);
