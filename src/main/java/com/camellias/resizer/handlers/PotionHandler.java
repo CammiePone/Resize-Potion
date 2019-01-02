@@ -2,21 +2,23 @@ package com.camellias.resizer.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.camellias.resizer.Main;
 import com.camellias.resizer.network.ResizePacketHandler;
-import com.camellias.resizer.network.packets.GrowthPacket;
-import com.camellias.resizer.network.packets.NormalSizePacket;
-import com.camellias.resizer.network.packets.ShrinkingPacket;
+import com.camellias.resizer.network.packets.PacketNormalSize;
+import com.camellias.resizer.network.packets.PacketOnResize;
+import com.camellias.resizer.network.packets.PacketSpawnParticles;
+import com.camellias.resizer.network.packets.PacketAlteredSize;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
@@ -24,7 +26,6 @@ import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -41,95 +42,72 @@ public class PotionHandler
 	@SubscribeEvent
 	public static void onPotionAdded(PotionAddedEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayer)
+		if(event.getEntityLiving() instanceof EntityPlayerMP)
 		{
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			Random rand = new Random();
-			double d2 = rand.nextGaussian() * 0.02D;
-			double d0 = rand.nextGaussian() * 0.02D;
-			double d1 = rand.nextGaussian() * 0.02D;
-			
-			if(event.getPotionEffect().getPotion() == Main.SHRINKING)
+			EntityPlayerMP player = (EntityPlayerMP) event.getEntityLiving();
+			PacketOnResize packet = getResizePacketAdded(event, player, Main.SHRINKING);
+			if (packet == null)
 			{
-				PotionEffect potion = event.getPotionEffect();
-                if (!event.getEntityLiving().world.isRemote)
-                {
-                	ShrinkingPacket shrinkingPacket = new ShrinkingPacket(player, potion.getDuration(), potion.getAmplifier());
-    				ResizePacketHandler.INSTANCE.sendToAllTracking(shrinkingPacket, player);
-                }
-                else if(!potion.getIsAmbient())
-				{
-                    PotionEffect effectOld = event.getOldPotionEffect();
-                    if (effectOld == null || effectOld.getPotion() != Main.SHRINKING || effectOld.getAmplifier() != potion.getAmplifier())
-                    {
-                    	for (int k = 0; k < 30; ++k)
-    					{
-    						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
-    								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-    								player.posY + (double)(rand.nextFloat() * player.height),
-    								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-    								d2, d0, d1);
-    					}
-                    }
-				}
+				packet = getResizePacketAdded(event, player, Main.GROWTH);
 			}
-			
-			if(event.getPotionEffect().getPotion() == Main.GROWTH)
+			if (packet != null)
 			{
-				PotionEffect potion = event.getPotionEffect();
-				if (!event.getEntityLiving().world.isRemote)
-                {
-					GrowthPacket growthPacket = new GrowthPacket(player, potion.getDuration(), potion.getAmplifier());
-					ResizePacketHandler.INSTANCE.sendToAllTracking(growthPacket, player);
-                }
-				else if(!potion.getIsAmbient())
-				{
-					PotionEffect effectOld = event.getOldPotionEffect();
-                    if (effectOld == null || effectOld.getPotion() != Main.SHRINKING || effectOld.getAmplifier() != potion.getAmplifier())
-                    {
-                    	for (int k = 0; k < 40; ++k)
-    					{
-    						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
-    								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-    								player.posY + (double)(rand.nextFloat() * player.height * 2.0F),
-    								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-    								d2, d0, d1);
-    					}
-                    }
-				}
+				sendResizePacket(player, packet);
 			}
 		}
+	}
+	
+	@Nullable
+	private static PacketOnResize getResizePacketAdded(PotionAddedEvent event, EntityPlayerMP player, Potion potionTarget)
+	{
+		PotionEffect effectNew = event.getPotionEffect();
+		if (effectNew.getPotion() == potionTarget)
+		{
+			boolean shouldSpawnParticles = false;
+			if (!effectNew.getIsAmbient())
+	        {
+	        	PotionEffect effectOld = event.getOldPotionEffect();
+	            if (effectOld == null || effectOld.getPotion() != potionTarget || effectOld.getAmplifier() != effectNew.getAmplifier())
+	            {
+	            	shouldSpawnParticles = true;
+	            }
+	        }
+			return new PacketAlteredSize(player, potionTarget == Main.GROWTH, effectNew.getDuration(), effectNew.getAmplifier(), shouldSpawnParticles);
+		}
+		return null;
 	}
 	
 	@SubscribeEvent
 	public static void onPotionRemoved(PotionRemoveEvent event)
 	{
-		if(!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			
-			if(event.getPotion() == Main.GROWTH || event.getPotion() == Main.SHRINKING)
-			{
-				NormalSizePacket normalSizePacket = new NormalSizePacket(player);
-				
-				ResizePacketHandler.INSTANCE.sendToAllTracking(normalSizePacket, player);
-			}
-		}
+		sendResizePacketRemoved(event.getEntityLiving(), event.getPotion());
 	}
 	
 	@SubscribeEvent
 	public static void onPotionEnd(PotionExpiryEvent event)
 	{
-		if(!event.getEntityLiving().world.isRemote && event.getEntityLiving() instanceof EntityPlayer)
+		PotionEffect effect = event.getPotionEffect();
+		if (effect != null)
 		{
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			
-			if(event.getPotionEffect().getPotion() == Main.GROWTH || event.getPotionEffect().getPotion() == Main.SHRINKING)
-			{
-				NormalSizePacket normalSizePacket = new NormalSizePacket(player);
-				
-				ResizePacketHandler.INSTANCE.sendToAllTracking(normalSizePacket, player);
-			}
+			sendResizePacketRemoved(event.getEntityLiving(), effect.getPotion());
+		}
+	}
+	
+	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
+    {
+        if (entity instanceof EntityPlayerMP && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
+        {
+        	EntityPlayerMP player = (EntityPlayerMP) entity;
+			sendResizePacket(player, new PacketNormalSize(player));
+        }
+    }
+	
+	private static void sendResizePacket(EntityPlayerMP player, PacketOnResize packet)
+	{
+		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, player);
+		if (packet.shouldSpawnParticles())
+		{
+			ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(player), player);
 		}
 	}
 	
