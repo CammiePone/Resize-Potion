@@ -44,6 +44,14 @@ public abstract class PacketOnResize implements IMessage
 		shouldSpawnParticles = buf.readBoolean();
 	}
 	
+	/**
+	 * Removes the specified resize effects from the player and, if allowed by the packet, spawns particles at the resized player's location
+	 * 
+	 * @param ctx handler context the packet is in
+	 * @param removeGrowth removes growth effect from player
+	 * @param removeShrinking removes shrinking effect from player
+	 * @return resized player, if that player was found, or null if not found
+	 */
 	@Nullable
 	protected EntityPlayer removePotionEffect(MessageContext ctx, boolean removeGrowth, boolean removeShrinking)
 	{
@@ -62,6 +70,7 @@ public abstract class PacketOnResize implements IMessage
 				}
 				if (shouldSpawnParticles)
 				{
+					// Emulate EntityLiving#spawnExplosionParticle to spawn particles at the resized player's location
 					Random rand = new Random();
 					double xSpeed = rand.nextGaussian() * 0.02;
 					double ySpeed = rand.nextGaussian() * 0.02;

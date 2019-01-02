@@ -57,6 +57,14 @@ public class PotionHandler
 		}
 	}
 	
+	/**
+	 * Gets packet to resize a player when a shrinking or growth effect is added to them
+	 * 
+	 * @param event potion addition event
+	 * @param player resized player
+	 * @param potionTarget shrinking or growth resize potion
+	 * @return resize packet, if the new effect's potion matches the target potion, or null if it does not
+	 */
 	@Nullable
 	private static PacketOnResize getResizePacketAdded(PotionAddedEvent event, EntityPlayerMP player, Potion potionTarget)
 	{
@@ -64,8 +72,10 @@ public class PotionHandler
 		if (effectNew.getPotion() == potionTarget)
 		{
 			boolean shouldSpawnParticles = false;
+			// Prevent particle spawning if the effect was added by a beacon
 			if (!effectNew.getIsAmbient())
 	        {
+				// Only spawn particles if the added effect is not the same type and level
 	        	PotionEffect effectOld = event.getOldPotionEffect();
 	            if (effectOld == null || effectOld.getPotion() != potionTarget || effectOld.getAmplifier() != effectNew.getAmplifier())
 	            {
@@ -93,6 +103,12 @@ public class PotionHandler
 		}
 	}
 	
+	/**
+	 * Sends packet to resize a player when a shrinking or growth effect is removed (either by force or as a result of expiration) from them
+	 * 
+	 * @param entity potentially resized player
+	 * @param potionTarget shrinking or growth resize potion
+	 */
 	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
     {
         if (entity instanceof EntityPlayerMP && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
@@ -102,6 +118,12 @@ public class PotionHandler
         }
     }
 	
+	/**
+	 * Sends resize/particle-spawning packet to all players tracking the resized player, and sends particle-spawning packet to the resized player if allowed
+	 * 
+	 * @param player resized player
+	 * @param packet {@link PacketAlteredSize shrinking/growth} or {@link PacketNormalSize size-restoring} packet for resized player
+	 */
 	private static void sendResizePacket(EntityPlayerMP player, PacketOnResize packet)
 	{
 		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, player);
@@ -121,6 +143,12 @@ public class PotionHandler
 		}
 	}
 	
+    /**
+     * Allows or denies the addition of a shrinking or growth resize potion
+     * 
+     * @param event potion applicability event
+     * @param potionTarget shrinking or growth resize potion
+     */
     private static void setPotionApplicability(PotionApplicableEvent event, Potion potionTarget)
     {
         if (event.getPotionEffect().getPotion() == potionTarget)
