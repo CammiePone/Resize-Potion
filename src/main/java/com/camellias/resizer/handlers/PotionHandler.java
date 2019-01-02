@@ -74,14 +74,14 @@ public class PotionHandler
 			boolean shouldSpawnParticles = false;
 			// Prevent particle spawning if the effect was added by a beacon
 			if (!effectNew.getIsAmbient())
-	        {
+			{
 				// Only spawn particles if the added effect is not the same type and level
-	        	PotionEffect effectOld = event.getOldPotionEffect();
-	            if (effectOld == null || effectOld.getPotion() != potionTarget || effectOld.getAmplifier() != effectNew.getAmplifier())
-	            {
-	            	shouldSpawnParticles = true;
-	            }
-	        }
+				PotionEffect effectOld = event.getOldPotionEffect();
+				if (effectOld == null || effectOld.getPotion() != potionTarget || effectOld.getAmplifier() != effectNew.getAmplifier())
+				{
+					shouldSpawnParticles = true;
+				}
+			}
 			return new PacketAlteredSize(player, potionTarget == Main.GROWTH, effectNew.getDuration(), effectNew.getAmplifier(), shouldSpawnParticles);
 		}
 		return null;
@@ -110,13 +110,13 @@ public class PotionHandler
 	 * @param potionTarget shrinking or growth resize potion
 	 */
 	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
-    {
-        if (entity instanceof EntityPlayerMP && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
-        {
-        	EntityPlayerMP player = (EntityPlayerMP) entity;
+	{
+		if (entity instanceof EntityPlayerMP && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
+		{
+			EntityPlayerMP player = (EntityPlayerMP) entity;
 			sendResizePacket(player, new PacketNormalSize(player));
-        }
-    }
+		}
+	}
 	
 	/**
 	 * Sends resize/particle-spawning packet to all players tracking the resized player, and sends particle-spawning packet to the resized player if allowed
@@ -143,20 +143,20 @@ public class PotionHandler
 		}
 	}
 	
-    /**
-     * Allows or denies the addition of a shrinking or growth resize potion
-     * 
-     * @param event potion applicability event
-     * @param potionTarget shrinking or growth resize potion
-     */
-    private static void setPotionApplicability(PotionApplicableEvent event, Potion potionTarget)
-    {
-        if (event.getPotionEffect().getPotion() == potionTarget)
-        {
-        	Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
-            event.setResult(((EntityPlayer) event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
-        }
-    }
+	/**
+	 * Allows or denies the addition of a shrinking or growth resize potion
+	 * 
+	 * @param event potion applicability event
+	 * @param potionTarget shrinking or growth resize potion
+	 */
+	private static void setPotionApplicability(PotionApplicableEvent event, Potion potionTarget)
+	{
+		if (event.getPotionEffect().getPotion() == potionTarget)
+		{
+			Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
+			event.setResult(((EntityPlayer) event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
+		}
+	}
 	
 	
 	
