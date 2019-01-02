@@ -138,32 +138,19 @@ public class PotionHandler
 	{
 		if(event.getEntityLiving() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			
-			if(event.getPotionEffect().getPotion() == Main.SHRINKING)
-			{
-				if(player.isPotionActive(Main.GROWTH))
-				{
-					event.setResult(Event.Result.DENY);
-				}
-				else
-				{
-					event.setResult(Event.Result.ALLOW);
-				}
-			}
-			if(event.getPotionEffect().getPotion() == Main.GROWTH)
-			{
-				if(player.isPotionActive(Main.SHRINKING))
-				{
-					event.setResult(Event.Result.DENY);
-				}
-				else
-				{
-					event.setResult(Event.Result.ALLOW);
-				}
-			}
+			setPotionApplicability(event, Main.SHRINKING);
+			setPotionApplicability(event, Main.GROWTH);
 		}
 	}
+	
+    private static void setPotionApplicability(PotionApplicableEvent event, Potion potionTarget)
+    {
+        if (event.getPotionEffect().getPotion() == potionTarget)
+        {
+        	Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
+            event.setResult(((EntityPlayer) event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
+        }
+    }
 	
 	
 	
