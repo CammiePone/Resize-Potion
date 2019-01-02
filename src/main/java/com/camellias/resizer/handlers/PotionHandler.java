@@ -59,14 +59,18 @@ public class PotionHandler
                 }
                 else if(!potion.getIsAmbient())
 				{
-					for (int k = 0; k < 30; ++k)
-					{
-						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
-								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-								player.posY + (double)(rand.nextFloat() * player.height),
-								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-								d2, d0, d1);
-					}
+                    PotionEffect effectOld = event.getOldPotionEffect();
+                    if (effectOld == null || effectOld.getPotion() != Main.SHRINKING || effectOld.getAmplifier() != potion.getAmplifier())
+                    {
+                    	for (int k = 0; k < 30; ++k)
+    					{
+    						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
+    								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+    								player.posY + (double)(rand.nextFloat() * player.height),
+    								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+    								d2, d0, d1);
+    					}
+                    }
 				}
 			}
 			
@@ -80,14 +84,18 @@ public class PotionHandler
                 }
 				else if(!potion.getIsAmbient())
 				{
-					for (int k = 0; k < 40; ++k)
-					{
-						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
-								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-								player.posY + (double)(rand.nextFloat() * player.height * 2.0F),
-								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
-								d2, d0, d1);
-					}
+					PotionEffect effectOld = event.getOldPotionEffect();
+                    if (effectOld == null || effectOld.getPotion() != Main.SHRINKING || effectOld.getAmplifier() != potion.getAmplifier())
+                    {
+                    	for (int k = 0; k < 40; ++k)
+    					{
+    						player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 
+    								player.posX + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+    								player.posY + (double)(rand.nextFloat() * player.height * 2.0F),
+    								player.posZ + (double)(rand.nextFloat() * player.width * 2.0F) - (double)player.width,
+    								d2, d0, d1);
+    					}
+                    }
 				}
 			}
 		}
