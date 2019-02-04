@@ -1,9 +1,8 @@
 package com.camellias.resizer.network.packets;
 
-import com.camellias.resizer.Main;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -34,7 +33,7 @@ public class PacketSpawnParticles extends PacketOnResize
 		@Override
 		public IMessage onMessage(PacketSpawnParticles message, MessageContext ctx)
 		{
-			Main.proxy.getThreadListener(ctx).addScheduledTask(() -> message.removePotionEffect(ctx, false, false));
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.removePotionEffect(ctx, false, false));
 			return null;
 		}
 	}

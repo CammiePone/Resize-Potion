@@ -5,6 +5,7 @@ import com.camellias.resizer.Main;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -47,7 +48,7 @@ public class PacketAlteredSize extends PacketOnResize
 		@Override
 		public IMessage onMessage(PacketAlteredSize message, MessageContext ctx)
 		{
-			Main.proxy.getThreadListener(ctx).addScheduledTask(() ->
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() ->
 			{
 				EntityLivingBase entity = message.removePotionEffect(ctx, !message.isGrowth, message.isGrowth);
 				if (entity != null)
