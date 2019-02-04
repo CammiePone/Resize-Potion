@@ -122,14 +122,10 @@ public class PotionHandler
 	 */
 	private static void sendResizePacket(EntityLivingBase entity, PacketOnResize packet)
 	{
-		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
-		
-		if(entity instanceof EntityPlayerMP)
+		if(packet.shouldSpawnParticles() && entity instanceof EntityPlayerMP)
 		{
-			if(packet.shouldSpawnParticles())
-			{
-				ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(entity), (EntityPlayerMP) entity);
-			}
+			ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
+			ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(entity), (EntityPlayerMP) entity);
 		}
 	}
 	
