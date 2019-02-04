@@ -1,6 +1,9 @@
 package com.camellias.resizer.proxy;
 
-import net.minecraft.entity.player.EntityPlayer;
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -12,16 +15,15 @@ public class CommonProxy
 		
 	}
 	
-	public EntityPlayer getPlayer(final MessageContext context)
+	@Nullable
+	public EntityLivingBase getEntityLivingBase(MessageContext context, int entityID)
 	{
 		if(context.side.isServer())
 		{
-			return context.getServerHandler().player;
-		} 
-		else
-		{
-			throw new WrongSideException("Tried to get the player from a client-side MessageContext on the dedicated server");
+			Entity entity = context.getServerHandler().player.world.getEntityByID(entityID);
+			return entity instanceof EntityLivingBase ? (EntityLivingBase) entity : null;
 		}
+		throw new WrongSideException("Tried to get the player from a client-side MessageContext on the dedicated server");
 	}
 	
 	public IThreadListener getThreadListener(final MessageContext context)

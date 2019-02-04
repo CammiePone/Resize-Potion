@@ -1,7 +1,11 @@
 package com.camellias.resizer.proxy;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.IThreadListener;
@@ -17,16 +21,12 @@ public class ClientProxy extends CommonProxy
 	}
 	
 	@Override
-	public EntityPlayer getPlayer(final MessageContext context)
+	@Nullable
+	public EntityLivingBase getEntityLivingBase(MessageContext context, int entityID)
 	{
-		if(context.side.isClient())
-		{
-			return Minecraft.getMinecraft().player;
-		}
-		else
-		{
-			return context.getServerHandler().player;
-		}
+		EntityPlayer player = context.side.isClient() ? Minecraft.getMinecraft().player : context.getServerHandler().player;
+		Entity entity = player.world.getEntityByID(entityID);
+		return entity instanceof EntityLivingBase ? (EntityLivingBase) entity : null;
 	}
 	
 	@Override

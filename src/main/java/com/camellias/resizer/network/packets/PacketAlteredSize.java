@@ -3,7 +3,7 @@ package com.camellias.resizer.network.packets;
 import com.camellias.resizer.Main;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -16,9 +16,9 @@ public class PacketAlteredSize extends PacketOnResize
 	
 	public PacketAlteredSize() {}
 	
-	public PacketAlteredSize(EntityPlayer player, boolean isGrowth, int duration, int amplifier, boolean shouldSpawnParticles)
+	public PacketAlteredSize(EntityLivingBase entity, boolean isGrowth, int duration, int amplifier, boolean shouldSpawnParticles)
 	{
-		super(player, shouldSpawnParticles);
+		super(entity, shouldSpawnParticles);
 		this.isGrowth = isGrowth;
 		this.duration = duration;
 		this.amplifier = amplifier;
@@ -49,10 +49,10 @@ public class PacketAlteredSize extends PacketOnResize
 		{
 			Main.proxy.getThreadListener(ctx).addScheduledTask(() ->
 			{
-				EntityPlayer player = message.removePotionEffect(ctx, !message.isGrowth, message.isGrowth);
-				if (player != null)
+				EntityLivingBase entity = message.removePotionEffect(ctx, !message.isGrowth, message.isGrowth);
+				if (entity != null)
 				{
-					player.addPotionEffect(new PotionEffect(message.isGrowth ? Main.GROWTH : Main.SHRINKING, message.duration, message.amplifier));
+					entity.addPotionEffect(new PotionEffect(message.isGrowth ? Main.GROWTH : Main.SHRINKING, message.duration, message.amplifier));
 				}
 			});
 			
