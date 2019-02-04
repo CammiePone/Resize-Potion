@@ -7,10 +7,10 @@ import javax.annotation.Nullable;
 
 import com.camellias.resizer.Main;
 import com.camellias.resizer.network.ResizePacketHandler;
+import com.camellias.resizer.network.packets.PacketAlteredSize;
 import com.camellias.resizer.network.packets.PacketNormalSize;
 import com.camellias.resizer.network.packets.PacketOnResize;
 import com.camellias.resizer.network.packets.PacketSpawnParticles;
-import com.camellias.resizer.network.packets.PacketAlteredSize;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -20,8 +20,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
@@ -30,7 +31,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,18 +42,15 @@ public class PotionHandler
 	@SubscribeEvent
 	public static void onPotionAdded(PotionAddedEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayerMP)
+		EntityLivingBase entity = event.getEntityLiving();
+		PacketOnResize packet = getResizePacketAdded(event, entity, Main.SHRINKING);
+		if (packet == null)
 		{
-			EntityPlayerMP player = (EntityPlayerMP) event.getEntityLiving();
-			PacketOnResize packet = getResizePacketAdded(event, player, Main.SHRINKING);
-			if (packet == null)
-			{
-				packet = getResizePacketAdded(event, player, Main.GROWTH);
-			}
-			if (packet != null)
-			{
-				sendResizePacket(player, packet);
-			}
+			packet = getResizePacketAdded(event, entity, Main.GROWTH);
+		}
+		if (packet != null)
+		{
+			sendResizePacket(entity, packet);
 		}
 	}
 	
@@ -66,7 +63,7 @@ public class PotionHandler
 	 * @return resize packet, if the new effect's potion matches the target potion, or null if it does not
 	 */
 	@Nullable
-	private static PacketOnResize getResizePacketAdded(PotionAddedEvent event, EntityPlayerMP player, Potion potionTarget)
+	private static PacketOnResize getResizePacketAdded(PotionAddedEvent event, EntityLivingBase entity, Potion potionTarget)
 	{
 		PotionEffect effectNew = event.getPotionEffect();
 		if (effectNew.getPotion() == potionTarget)
@@ -82,7 +79,7 @@ public class PotionHandler
 					shouldSpawnParticles = true;
 				}
 			}
-			return new PacketAlteredSize(player, potionTarget == Main.GROWTH, effectNew.getDuration(), effectNew.getAmplifier(), shouldSpawnParticles);
+			return new PacketAlteredSize(entity, potionTarget == Main.GROWTH, effectNew.getDuration(), effectNew.getAmplifier(), shouldSpawnParticles);
 		}
 		return null;
 	}
@@ -111,10 +108,9 @@ public class PotionHandler
 	 */
 	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
 	{
-		if (entity instanceof EntityPlayerMP && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
+		if ((potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
 		{
-			EntityPlayerMP player = (EntityPlayerMP) entity;
-			sendResizePacket(player, new PacketNormalSize(player));
+			sendResizePacket(entity, new PacketNormalSize(entity));
 		}
 	}
 	
@@ -124,23 +120,24 @@ public class PotionHandler
 	 * @param player resized player
 	 * @param packet {@link PacketAlteredSize shrinking/growth} or {@link PacketNormalSize size-restoring} packet for resized player
 	 */
-	private static void sendResizePacket(EntityPlayerMP player, PacketOnResize packet)
+	private static void sendResizePacket(EntityLivingBase entity, PacketOnResize packet)
 	{
-		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, player);
-		if (packet.shouldSpawnParticles())
+		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
+		
+		if(entity instanceof EntityPlayerMP)
 		{
-			ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(player), player);
+			if(packet.shouldSpawnParticles())
+			{
+				ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(entity), (EntityPlayerMP) entity);
+			}
 		}
 	}
 	
 	@SubscribeEvent
 	public static void isPotionApplicable(PotionApplicableEvent event)
 	{
-		if(event.getEntityLiving() instanceof EntityPlayer)
-		{
-			setPotionApplicability(event, Main.SHRINKING);
-			setPotionApplicability(event, Main.GROWTH);
-		}
+		setPotionApplicability(event, Main.SHRINKING);
+		setPotionApplicability(event, Main.GROWTH);
 	}
 	
 	/**
@@ -154,7 +151,7 @@ public class PotionHandler
 		if (event.getPotionEffect().getPotion() == potionTarget)
 		{
 			Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
-			event.setResult(((EntityPlayer) event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
+			event.setResult((event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
 		}
 	}
 	
@@ -169,27 +166,32 @@ public class PotionHandler
 	
 	
 	@SubscribeEvent
-	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	public static void onLivingUpdate(LivingUpdateEvent event)
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
-		EntityPlayer player = event.player;
-		PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
-		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
+		EntityLivingBase entity = event.getEntityLiving();
+		PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
+		PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
 		
-		if(player.isPotionActive(Main.GROWTH))
+		if(entity.isPotionActive(Main.GROWTH))
 		{
-			player.height = 1.8F + (growth.getAmplifier() + 1F);
-			player.width = player.height * (1F / 3F);
-			AxisAlignedBB aabb = player.getEntityBoundingBox();
-			double d0 = (double)player.width / 2.0D;
+			entity.height = 1.8F + (growth.getAmplifier() + 1F);
+			entity.width = entity.height * (1F / 3F);
+			AxisAlignedBB aabb = entity.getEntityBoundingBox();
+			double d0 = (double)entity.width / 2.0D;
 			
-			player.eyeHeight = player.height * 0.9F;
-			player.stepHeight = player.height / 3F;
+			if(entity instanceof EntityPlayer)
+			{
+				EntityPlayer player = (EntityPlayer) entity;
+				player.eyeHeight = entity.height * 0.9F;
+			}
+			
+			entity.stepHeight = entity.height / 3F;
 			
 			try
 			{
-				setSize.invoke(player, player.width, player.height);
+				setSize.invoke(entity, entity.width, entity.height);
 			}
 			catch (IllegalAccessException e)
 			{
@@ -204,25 +206,30 @@ public class PotionHandler
 				e.printStackTrace();
 			}
             
-			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
-            		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
+			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
+            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
 		}
 		
-		if(player.isPotionActive(Main.SHRINKING))
+		if(entity.isPotionActive(Main.SHRINKING))
 		{
-			player.height = 0.9F / (shrinking.getAmplifier() + 1);
-			player.width = 0.35F;
-			AxisAlignedBB aabb = player.getEntityBoundingBox();
-			double d0 = (double)player.width / 2.0D;
+			entity.height = 0.9F / (shrinking.getAmplifier() + 1);
+			entity.width = 0.35F;
+			AxisAlignedBB aabb = entity.getEntityBoundingBox();
+			double d0 = (double)entity.width / 2.0D;
 			
-			player.eyeHeight = player.height * 0.85F;
-			player.stepHeight = player.height / 3F;
-			player.jumpMovementFactor *= 1.75F;
-			player.fallDistance = 0.0F;
+			if(entity instanceof EntityPlayer)
+			{
+				EntityPlayer player = (EntityPlayer) entity;
+				player.eyeHeight = entity.height * 0.85F;
+			}
+			
+			entity.stepHeight = entity.height / 3F;
+			entity.jumpMovementFactor *= 1.75F;
+			entity.fallDistance = 0.0F;
 			
 			try
 			{
-				setSize.invoke(player, player.width, player.height);
+				setSize.invoke(entity, entity.width, entity.height);
 			}
 			catch (IllegalAccessException e)
 			{
@@ -239,36 +246,46 @@ public class PotionHandler
 			
 			if(shrinking.getAmplifier() >= 1)
 			{
-				if((ClimbingHandler.canClimb(player) != false))
+				if(entity instanceof EntityPlayer)
 				{
-					if(player.collidedHorizontally)
-                    {
-						if(!player.isSneaking())
-                        {
-                            player.motionY = 0.1F;
-                        }
-                        
-                        if(player.isSneaking())
-                        {
-                            player.motionY = 0.0F;
-                        }
-                    }
+					EntityPlayer player = (EntityPlayer) entity;
+					
+					if((ClimbingHandler.canClimb(player) != false))
+					{
+						if(entity.collidedHorizontally)
+	                    {
+							if(!entity.isSneaking())
+	                        {
+	                            entity.motionY = 0.1F;
+	                        }
+	                        
+	                        if(entity.isSneaking())
+	                        {
+	                            entity.motionY = 0.0F;
+	                        }
+	                    }
+					}
 				}
 			}
 			
-			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
-            		player.posX + d0, aabb.minY + (double)player.height, player.posZ + d0));
+			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
+            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
 		}
 		
-		if(player.isPotionActive(Main.GROWTH) == false && player.isPotionActive(Main.SHRINKING) == false)
+		if(entity.isPotionActive(Main.GROWTH) == false && entity.isPotionActive(Main.SHRINKING) == false)
 		{
-			player.eyeHeight = player.getDefaultEyeHeight();
-			player.stepHeight = 0.6F;
+			if(entity instanceof EntityPlayer)
+			{
+				EntityPlayer player = (EntityPlayer) entity;
+				
+				player.eyeHeight = player.getDefaultEyeHeight();
+				player.stepHeight = 0.6F;
+			}
 		}
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerJump(LivingJumpEvent event)
+	public static void onLivingump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
@@ -298,15 +315,15 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onPlayerRenderPre(RenderPlayerEvent.Pre event)
+	public static void onLivingRenderPre(RenderLivingEvent.Pre event)
 	{
 		//----Thank you Melonslise from the MMD Discord for helping getting the rendering working properly.----//
 		
-		EntityPlayer player = event.getEntityPlayer();
+		EntityLivingBase entity = event.getEntity();
 		
-		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
+		if(entity.isPotionActive(Main.GROWTH) || entity.isPotionActive(Main.SHRINKING))
 		{
-			float scale = player.height / 1.8F;
+			float scale = entity.height / 1.8F;
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(scale, scale, scale);
@@ -317,11 +334,11 @@ public class PotionHandler
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onPlayerRenderPost(RenderPlayerEvent.Post event)
+	public static void onLivingRenderPost(RenderLivingEvent.Post event)
 	{
-		EntityPlayer player = event.getEntityPlayer();
+		EntityLivingBase entity = event.getEntity();
 		
-		if(player.isPotionActive(Main.GROWTH) || player.isPotionActive(Main.SHRINKING))
+		if(entity.isPotionActive(Main.GROWTH) || entity.isPotionActive(Main.SHRINKING))
 		{
 			GlStateManager.popMatrix();
 		}
