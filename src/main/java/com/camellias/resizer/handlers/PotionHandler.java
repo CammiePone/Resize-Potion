@@ -42,15 +42,18 @@ public class PotionHandler
 	@SubscribeEvent
 	public static void onPotionAdded(PotionAddedEvent event)
 	{
-		EntityLivingBase entity = event.getEntityLiving();
-		PacketOnResize packet = getResizePacketAdded(event, entity, Main.SHRINKING);
-		if (packet == null)
+		if(!event.getEntityLiving().world.isRemote)
 		{
-			packet = getResizePacketAdded(event, entity, Main.GROWTH);
-		}
-		if (packet != null)
-		{
-			sendResizePacket(entity, packet);
+			EntityLivingBase entity = event.getEntityLiving();
+			PacketOnResize packet = getResizePacketAdded(event, entity, Main.SHRINKING);
+			if (packet == null)
+			{
+				packet = getResizePacketAdded(event, entity, Main.GROWTH);
+			}
+			if (packet != null)
+			{
+				sendResizePacket(entity, packet);
+			}
 		}
 	}
 	
@@ -108,7 +111,7 @@ public class PotionHandler
 	 */
 	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
 	{
-		if ((potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
+		if (!entity.world.isRemote && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
 		{
 			sendResizePacket(entity, new PacketNormalSize(entity));
 		}
@@ -117,14 +120,14 @@ public class PotionHandler
 	/**
 	 * Sends resize/particle-spawning packet to all players tracking the resized player, and sends particle-spawning packet to the resized player if allowed
 	 * 
-	 * @param player resized player
+	 * @param entity resized player
 	 * @param packet {@link PacketAlteredSize shrinking/growth} or {@link PacketNormalSize size-restoring} packet for resized player
 	 */
 	private static void sendResizePacket(EntityLivingBase entity, PacketOnResize packet)
 	{
-		if(packet.shouldSpawnParticles() && entity instanceof EntityPlayerMP)
+		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
+		if (packet.shouldSpawnParticles() && entity instanceof EntityPlayerMP)
 		{
-			ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
 			ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(entity), (EntityPlayerMP) entity);
 		}
 	}
@@ -244,9 +247,7 @@ public class PotionHandler
 			{
 				if(entity instanceof EntityPlayer)
 				{
-					EntityPlayer player = (EntityPlayer) entity;
-					
-					if((ClimbingHandler.canClimb(player) != false))
+					if((ClimbingHandler.canClimb((EntityPlayer) entity) != false))
 					{
 						if(entity.collidedHorizontally)
 	                    {
@@ -273,10 +274,9 @@ public class PotionHandler
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entity;
-				
 				player.eyeHeight = player.getDefaultEyeHeight();
-				player.stepHeight = 0.6F;
 			}
+			entity.stepHeight = 0.6F;
 		}
 	}
 	
