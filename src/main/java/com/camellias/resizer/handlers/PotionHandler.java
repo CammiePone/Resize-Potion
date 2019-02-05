@@ -42,15 +42,18 @@ public class PotionHandler
 	@SubscribeEvent
 	public static void onPotionAdded(PotionAddedEvent event)
 	{
-		EntityLivingBase entity = event.getEntityLiving();
-		PacketOnResize packet = getResizePacketAdded(event, entity, Main.SHRINKING);
-		if (packet == null)
+		if(!event.getEntityLiving().world.isRemote)
 		{
-			packet = getResizePacketAdded(event, entity, Main.GROWTH);
-		}
-		if (packet != null)
-		{
-			sendResizePacket(entity, packet);
+			EntityLivingBase entity = event.getEntityLiving();
+			PacketOnResize packet = getResizePacketAdded(event, entity, Main.SHRINKING);
+			if (packet == null)
+			{
+				packet = getResizePacketAdded(event, entity, Main.GROWTH);
+			}
+			if (packet != null)
+			{
+				sendResizePacket(entity, packet);
+			}
 		}
 	}
 	
@@ -108,7 +111,7 @@ public class PotionHandler
 	 */
 	private static void sendResizePacketRemoved(EntityLivingBase entity, Potion potionTarget)
 	{
-		if ((potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
+		if (!entity.world.isRemote && (potionTarget == Main.GROWTH || potionTarget == Main.SHRINKING))
 		{
 			sendResizePacket(entity, new PacketNormalSize(entity));
 		}
@@ -117,14 +120,14 @@ public class PotionHandler
 	/**
 	 * Sends resize/particle-spawning packet to all players tracking the resized player, and sends particle-spawning packet to the resized player if allowed
 	 * 
-	 * @param player resized player
+	 * @param entity resized player
 	 * @param packet {@link PacketAlteredSize shrinking/growth} or {@link PacketNormalSize size-restoring} packet for resized player
 	 */
 	private static void sendResizePacket(EntityLivingBase entity, PacketOnResize packet)
 	{
-		if(packet.shouldSpawnParticles() && entity instanceof EntityPlayerMP)
+		ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
+		if (packet.shouldSpawnParticles() && entity instanceof EntityPlayerMP)
 		{
-			ResizePacketHandler.INSTANCE.sendToAllTracking(packet, entity);
 			ResizePacketHandler.INSTANCE.sendTo(new PacketSpawnParticles(entity), (EntityPlayerMP) entity);
 		}
 	}
@@ -147,7 +150,7 @@ public class PotionHandler
 		if (event.getPotionEffect().getPotion() == potionTarget)
 		{
 			Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
-			event.setResult((event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
+			event.setResult(event.getEntityLiving().isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
 		}
 	}
 	
@@ -170,12 +173,12 @@ public class PotionHandler
 		PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
 		PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
 		
-		if(entity.isPotionActive(Main.GROWTH))
+		if(growth != null)
 		{
 			entity.height = 1.8F + (growth.getAmplifier() + 1F);
 			entity.width = entity.height * (1F / 3F);
 			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = (double)entity.width / 2.0D;
+			double d0 = entity.width / 2.0D;
 			
 			if(entity instanceof EntityPlayer)
 			{
@@ -203,24 +206,24 @@ public class PotionHandler
 			}
             
 			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
+            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
-		if(entity.isPotionActive(Main.SHRINKING))
+		if(shrinking != null)
 		{
 			entity.height = 0.9F / (shrinking.getAmplifier() + 1);
 			entity.width = 0.35F;
 			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = (double)entity.width / 2.0D;
+			double d0 = entity.width / 2.0D;
 			
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entity;
 				player.eyeHeight = entity.height * 0.85F;
+				entity.jumpMovementFactor *= 1.75F;
 			}
 			
 			entity.stepHeight = entity.height / 3F;
-			entity.jumpMovementFactor *= 1.75F;
 			entity.fallDistance = 0.0F;
 			
 			try
@@ -244,9 +247,7 @@ public class PotionHandler
 			{
 				if(entity instanceof EntityPlayer)
 				{
-					EntityPlayer player = (EntityPlayer) entity;
-					
-					if((ClimbingHandler.canClimb(player) != false))
+					if((ClimbingHandler.canClimb((EntityPlayer) entity) != false))
 					{
 						if(entity.collidedHorizontally)
 	                    {
@@ -265,18 +266,17 @@ public class PotionHandler
 			}
 			
 			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
+            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
-		if(entity.isPotionActive(Main.GROWTH) == false && entity.isPotionActive(Main.SHRINKING) == false)
+		if(growth == null && shrinking == null)
 		{
 			if(entity instanceof EntityPlayer)
 			{
 				EntityPlayer player = (EntityPlayer) entity;
-				
 				player.eyeHeight = player.getDefaultEyeHeight();
-				player.stepHeight = 0.6F;
 			}
+			entity.stepHeight = 0.6F;
 		}
 	}
 	
@@ -286,7 +286,7 @@ public class PotionHandler
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
 		
-		if(entity.isPotionActive(Main.SHRINKING))
+		if(potion != null)
 		{
 			if(potion.getAmplifier() == 0)
 			{
