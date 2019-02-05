@@ -35,8 +35,8 @@ item.growth_bauble.info2=    to 150%% their height.
 item.growth_bauble.attackdamage=+50%% Attack Damage
 item.growth_bauble.knockbackresist=+50%% Knockback Resistance
 item.growth_bauble.stepheight=+25%% Step Height
-item.growth_bauble.speed=-20%% Speed
-item.growth_bauble.attackspeed=-30%% Attack Speed
+item.growth_bauble.jumpheight=+200%% Jump Height
+item.growth_bauble.attackspeed=-20%% Attack Speed
 
 config.resize.title=Resizing Potion GUI Config
 config.resize.recipe=Potion Recipe Item

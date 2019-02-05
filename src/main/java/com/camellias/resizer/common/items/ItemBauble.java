@@ -93,8 +93,8 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 			String attackdamage = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".attackdamage");
 			String knockbackresist = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".knockbackresist");
 			String stepheight = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".stepheight");
+			String jumpheight = TextFormatting.BLUE + I18n.format(item.getTranslationKey() + ".jumpheight");
 			
-			String speed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".speed");
 			String attackspeed = TextFormatting.RED + I18n.format(item.getTranslationKey() + ".attackspeed");
 			
 			tooltip.add(growth);
@@ -109,8 +109,8 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 				tooltip.add(attackdamage);
 				tooltip.add(knockbackresist);
 				tooltip.add(stepheight);
+				tooltip.add(jumpheight);
 				
-				tooltip.add(speed);
 				tooltip.add(attackspeed);
 			}
 			else

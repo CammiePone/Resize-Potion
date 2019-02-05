@@ -21,6 +21,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -169,28 +171,115 @@ public class PotionHandler
 	{
 		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
 		
-		EntityLivingBase entity = event.getEntityLiving();
-		PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
-		PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
+		if(!(event.getEntityLiving() instanceof EntityPlayer))
+		{
+			EntityLivingBase entity = event.getEntityLiving();
+			PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
+			PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
+			
+			if(growth != null)
+			{
+				entity.height = 1.8F + (growth.getAmplifier() + 1F);
+				entity.width = entity.height * (1F / 3F);
+				AxisAlignedBB aabb = entity.getEntityBoundingBox();
+				double d0 = entity.width / 2.0D;
+				
+				try
+				{
+					setSize.invoke(entity, entity.width, entity.height);
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch (InvocationTargetException e)
+				{
+					e.printStackTrace();
+				}
+	            
+				entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
+	            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
+			}
+			
+			if(shrinking != null)
+			{
+				entity.height = 0.9F / (shrinking.getAmplifier() + 1);
+				entity.width = 0.35F;
+				AxisAlignedBB aabb = entity.getEntityBoundingBox();
+				double d0 = entity.width / 2.0D;
+				entity.fallDistance = 0.0F;
+				
+				try
+				{
+					setSize.invoke(entity, entity.width, entity.height);
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch (InvocationTargetException e)
+				{
+					e.printStackTrace();
+				}
+				
+				if(shrinking.getAmplifier() >= 1)
+				{
+					if(entity instanceof EntityPlayer)
+					{
+						if((ClimbingHandler.canClimb((EntityPlayer) entity) != false))
+						{
+							if(entity.collidedHorizontally)
+		                    {
+								if(!entity.isSneaking())
+		                        {
+		                            entity.motionY = 0.1F;
+		                        }
+		                        
+		                        if(entity.isSneaking())
+		                        {
+		                            entity.motionY = 0.0F;
+		                        }
+		                    }
+						}
+					}
+				}
+				
+				entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
+	            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event)
+	{
+		//----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
+		
+		EntityPlayer player = event.player;
+		PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
+		PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 		
 		if(growth != null)
 		{
-			entity.height = 1.8F + (growth.getAmplifier() + 1F);
-			entity.width = entity.height * (1F / 3F);
-			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = entity.width / 2.0D;
+			player.height = 1.8F + (growth.getAmplifier() + 1F);
+			player.width = player.height * (1F / 3F);
+			AxisAlignedBB aabb = player.getEntityBoundingBox();
+			double d0 = player.width / 2.0D;
 			
-			if(entity instanceof EntityPlayer)
-			{
-				EntityPlayer player = (EntityPlayer) entity;
-				player.eyeHeight = entity.height * 0.9F;
-			}
-			
-			entity.stepHeight = entity.height / 3F;
+			player.eyeHeight = player.height * 0.9F;
+			player.stepHeight = player.height / 3F;
 			
 			try
 			{
-				setSize.invoke(entity, entity.width, entity.height);
+				setSize.invoke(player, player.width, player.height);
 			}
 			catch (IllegalAccessException e)
 			{
@@ -205,30 +294,26 @@ public class PotionHandler
 				e.printStackTrace();
 			}
             
-			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
+			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
+					player.posX + d0, aabb.minY + player.height, player.posZ + d0));
 		}
 		
 		if(shrinking != null)
 		{
-			entity.height = 0.9F / (shrinking.getAmplifier() + 1);
-			entity.width = 0.35F;
-			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = entity.width / 2.0D;
+			player.height = 0.9F / (shrinking.getAmplifier() + 1);
+			player.width = 0.35F;
+			AxisAlignedBB aabb = player.getEntityBoundingBox();
+			double d0 = player.width / 2.0D;
 			
-			if(entity instanceof EntityPlayer)
-			{
-				EntityPlayer player = (EntityPlayer) entity;
-				player.eyeHeight = entity.height * 0.85F;
-				entity.jumpMovementFactor *= 1.75F;
-			}
+			player.eyeHeight = player.height * 0.85F;
+			player.jumpMovementFactor *= 1.75F;
 			
-			entity.stepHeight = entity.height / 3F;
-			entity.fallDistance = 0.0F;
+			player.stepHeight = player.height / 3F;
+			player.fallDistance = 0.0F;
 			
 			try
 			{
-				setSize.invoke(entity, entity.width, entity.height);
+				setSize.invoke(player, player.width, player.height);
 			}
 			catch (IllegalAccessException e)
 			{
@@ -245,38 +330,31 @@ public class PotionHandler
 			
 			if(shrinking.getAmplifier() >= 1)
 			{
-				if(entity instanceof EntityPlayer)
+				if((ClimbingHandler.canClimb((EntityPlayer) player) != false))
 				{
-					if((ClimbingHandler.canClimb((EntityPlayer) entity) != false))
-					{
-						if(entity.collidedHorizontally)
-	                    {
-							if(!entity.isSneaking())
-	                        {
-	                            entity.motionY = 0.1F;
-	                        }
-	                        
-	                        if(entity.isSneaking())
-	                        {
-	                            entity.motionY = 0.0F;
-	                        }
-	                    }
-					}
+					if(player.collidedHorizontally)
+                    {
+						if(!player.isSneaking())
+                        {
+							player.motionY = 0.1F;
+                        }
+                        
+                        if(player.isSneaking())
+                        {
+                        	player.motionY = 0.0F;
+                        }
+                    }
 				}
 			}
 			
-			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
+			player.setEntityBoundingBox(new AxisAlignedBB(player.posX - d0, aabb.minY, player.posZ - d0, 
+					player.posX + d0, aabb.minY + player.height, player.posZ + d0));
 		}
 		
 		if(growth == null && shrinking == null)
 		{
-			if(entity instanceof EntityPlayer)
-			{
-				EntityPlayer player = (EntityPlayer) entity;
-				player.eyeHeight = player.getDefaultEyeHeight();
-			}
-			entity.stepHeight = 0.6F;
+			player.eyeHeight = player.getDefaultEyeHeight();
+			player.stepHeight = 0.6F;
 		}
 	}
 	
@@ -284,18 +362,24 @@ public class PotionHandler
 	public static void onLivingump(LivingJumpEvent event)
 	{
 		EntityLivingBase entity = event.getEntityLiving();
-		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
+		PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
+		PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
 		
-		if(potion != null)
+		if(shrinking != null)
 		{
-			if(potion.getAmplifier() == 0)
+			if(shrinking.getAmplifier() == 0)
 			{
-				entity.motionY += potion.getAmplifier() + 0.25D;
+				entity.motionY += shrinking.getAmplifier() + 0.25D;
 			}
 			else
 			{
-				entity.motionY += potion.getAmplifier() / 2.0D;
+				entity.motionY += shrinking.getAmplifier() / 2.0D;
 			}
+		}
+		
+		if(growth != null)
+		{
+			entity.motionY += (growth.getAmplifier() + 1) * 0.2;
 		}
 	}
 	
