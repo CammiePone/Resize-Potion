@@ -220,10 +220,10 @@ public class PotionHandler
 			{
 				EntityPlayer player = (EntityPlayer) entity;
 				player.eyeHeight = entity.height * 0.85F;
+				entity.jumpMovementFactor *= 1.75F;
 			}
 			
 			entity.stepHeight = entity.height / 3F;
-			entity.jumpMovementFactor *= 1.75F;
 			entity.fallDistance = 0.0F;
 			
 			try
