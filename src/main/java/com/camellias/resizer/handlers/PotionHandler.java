@@ -150,7 +150,7 @@ public class PotionHandler
 		if (event.getPotionEffect().getPotion() == potionTarget)
 		{
 			Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
-			event.setResult((event.getEntityLiving()).isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
+			event.setResult(event.getEntityLiving().isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class PotionHandler
 			entity.height = 1.8F + (growth.getAmplifier() + 1F);
 			entity.width = entity.height * (1F / 3F);
 			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = (double)entity.width / 2.0D;
+			double d0 = entity.width / 2.0D;
 			
 			if(entity instanceof EntityPlayer)
 			{
@@ -206,7 +206,7 @@ public class PotionHandler
 			}
             
 			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
+            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
 		if(entity.isPotionActive(Main.SHRINKING))
@@ -214,7 +214,7 @@ public class PotionHandler
 			entity.height = 0.9F / (shrinking.getAmplifier() + 1);
 			entity.width = 0.35F;
 			AxisAlignedBB aabb = entity.getEntityBoundingBox();
-			double d0 = (double)entity.width / 2.0D;
+			double d0 = entity.width / 2.0D;
 			
 			if(entity instanceof EntityPlayer)
 			{
@@ -266,7 +266,7 @@ public class PotionHandler
 			}
 			
 			entity.setEntityBoundingBox(new AxisAlignedBB(entity.posX - d0, aabb.minY, entity.posZ - d0, 
-            		entity.posX + d0, aabb.minY + (double)entity.height, entity.posZ + d0));
+            		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
 		if(entity.isPotionActive(Main.GROWTH) == false && entity.isPotionActive(Main.SHRINKING) == false)
