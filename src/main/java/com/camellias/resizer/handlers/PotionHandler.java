@@ -173,7 +173,7 @@ public class PotionHandler
 		PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
 		PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
 		
-		if(entity.isPotionActive(Main.GROWTH))
+		if(growth != null)
 		{
 			entity.height = 1.8F + (growth.getAmplifier() + 1F);
 			entity.width = entity.height * (1F / 3F);
@@ -209,7 +209,7 @@ public class PotionHandler
             		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
-		if(entity.isPotionActive(Main.SHRINKING))
+		if(shrinking != null)
 		{
 			entity.height = 0.9F / (shrinking.getAmplifier() + 1);
 			entity.width = 0.35F;
@@ -269,7 +269,7 @@ public class PotionHandler
             		entity.posX + d0, aabb.minY + entity.height, entity.posZ + d0));
 		}
 		
-		if(entity.isPotionActive(Main.GROWTH) == false && entity.isPotionActive(Main.SHRINKING) == false)
+		if(growth == null && shrinking == null)
 		{
 			if(entity instanceof EntityPlayer)
 			{
@@ -286,7 +286,7 @@ public class PotionHandler
 		EntityLivingBase entity = event.getEntityLiving();
 		PotionEffect potion = entity.getActivePotionEffect(Main.SHRINKING);
 		
-		if(entity.isPotionActive(Main.SHRINKING))
+		if(potion != null)
 		{
 			if(potion.getAmplifier() == 0)
 			{
