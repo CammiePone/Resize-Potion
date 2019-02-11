@@ -3,8 +3,11 @@ package com.camellias.resizer.handlers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,217 +17,142 @@ public class ClimbingHandler
 {
 	//-----ClimbingHandler.java was made by XzeroAir, so go check him out, as he's waaaay more talented than me.-----//
 	
-	public static boolean movingForward(EntityPlayer player)
+	public static boolean movingForward(EntityLivingBase player, EnumFacing facing)
 	{
-		if(player.getHorizontalFacing().getAxisDirection() == player.getHorizontalFacing().getAxisDirection().POSITIVE)
+		if (((facing.getDirectionVec().getX() * player.motionX) > 0) || ((facing.getDirectionVec().getZ() * player.motionZ) > 0))
 		{
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().X) 
-			{
-				if(player.motionX > 0) 
-				{
-					return true;
-				}
-			}
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().Z) 
-			{
-				if(player.motionZ > 0) 
-				{
-					return true;
-				}
-			}
-		} 
-		else 
-		{
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().X) 
-			{
-				if(player.motionX < 0) 
-				{
-					return true;
-				}
-			}
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().Z) 
-			{
-				if(player.motionZ < 0) 
-				{
-					return true;
-				}
-			}
+			return true;
 		}
+		
 		return false;
 	}
-
-	public static boolean canClimb(EntityPlayer player)
+	
+	public static double moveX(EntityLivingBase player)
 	{
-		World world = player.getEntityWorld();
-
-		//North
-		if(player.getHorizontalFacing() == EnumFacing.NORTH)
+		if(player.motionX < 0)
 		{
-
-			BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
-			IBlockState front = world.getBlockState(pos.add(0, 0, 0).north());
-			IBlockState top = world.getBlockState(pos.add(0, 1, 0).north());
-			IBlockState head = world.getBlockState(pos.add(0, 1, 0));
-			IBlockState body = world.getBlockState(pos.add(0, 0, 0));
-			Block block = front.getBlock();
-			Block topBlock = top.getBlock();
-			Block headBlock = head.getBlock();
-			Block bodyBlock = body.getBlock();
-			
-			if((bodyBlock.isPassable(world, pos)))
+			return -player.motionX;
+		}
+		
+		return player.motionX;
+	}
+	
+	public static double moveZ(EntityLivingBase player)
+	{
+		if(player.motionZ < 0)
+		{
+			return -player.motionZ;
+		}
+		
+		return player.motionZ;
+	}
+	
+	public static double moveY(EntityLivingBase player)
+	{
+		if(player.motionY < 0)
+		{
+			return -player.motionY;
+		}
+		
+		return player.motionY;
+	}
+	
+	public static double movingVelocity(EntityPlayer player)
+	{
+		return 0;
+	}
+	
+	public static boolean isHeadspaceFree(World world, BlockPos pos, int height)
+	{
+		for (int y = 0; y < (height); y++)
+		{
+			if (!isOpenBlockSpace(world, pos.add(0, y, 0)))
 			{
-				if(!(block.isPassable(world, pos.north())))
-				{
-					if(topBlock instanceof BlockPane)
-					{
-						return true;
-					}
-					return true;
-				}
-			}
-			if((bodyBlock instanceof BlockStairs) || (bodyBlock instanceof BlockPane))
-			{
-				if(!(headBlock.isPassable(world, pos.add(0, 1, 0))))
-				{
-					return false;
-				}
-				return true;
-			}
-			if((headBlock instanceof BlockStairs) || (headBlock instanceof BlockSlab))
-			{
-				if(headBlock.canPlaceTorchOnTop(head, world, pos.add(0, 1, 0)))
-				{
-					return true;
-				}
+				return false;
 			}
 		}
-
-		//South
-		if(player.getHorizontalFacing() == EnumFacing.SOUTH)
+		
+		return true;
+	}
+	
+	private static boolean isOpenBlockSpace(World world, BlockPos pos)
+	{
+		final IBlockState iblockstate = world.getBlockState(pos);
+		
+		return !iblockstate.getBlock().isNormalCube(iblockstate, world, pos);
+	}
+	
+	public static boolean canClimb(EntityPlayer player, EnumFacing facing)
+	{
+		final World world = player.getEntityWorld();
+		final BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
+		final IBlockState f = world.getBlockState(pos.add(0, 0, 0).offset(facing));
+		final IBlockState t = world.getBlockState(pos.add(0, 1, 0).offset(facing));
+		final IBlockState h = world.getBlockState(pos.add(0, 1, 0));
+		final IBlockState b = world.getBlockState(pos.add(0, 0, 0));
+		final Block fb = f.getBlock();
+		final Block tb = t.getBlock();
+		final Block hb = h.getBlock();
+		final Block bb = b.getBlock();
+		final boolean fbpass = fb.isPassable(world, pos.offset(facing));
+		final boolean tbpass = tb.isPassable(world, pos.add(0, 1, 0).offset(facing));
+		final boolean hbpass = hb.isPassable(world, pos.add(0, 1, 0));
+		final boolean bbpass = bb.isPassable(world, pos);
+		
+		if(bbpass)
 		{
-			BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
-			IBlockState front = world.getBlockState(pos.add(0, 0, 0).south());
-			IBlockState top = world.getBlockState(pos.add(0, 1, 0).south());
-			IBlockState head = world.getBlockState(pos.add(0, 1, 0));
-			IBlockState body = world.getBlockState(pos.add(0, 0, 0));
-			Block block = front.getBlock();
-			Block topBlock = top.getBlock();
-			Block headBlock = head.getBlock();
-			Block bodyBlock = body.getBlock();
-			
-			if((bodyBlock.isPassable(world, pos)))
+			if(!fbpass)
 			{
-				if((!(block.isPassable(world, pos.south())) || block.isPassable(world, pos.south())))
+				if((!(tbpass || hbpass)))
 				{
-					if(topBlock instanceof BlockPane)
+					if((tb instanceof BlockPane))
 					{
-						return true;
+
 					}
-					return true;
-				}
-			}
-			if((bodyBlock instanceof BlockStairs) || (bodyBlock instanceof BlockPane))
-			{
-				if(!(headBlock.isPassable(world, pos.add(0, 1, 0))))
-				{
+					if((hb instanceof BlockStairs))
+					{
+						if(h.getValue(BlockStairs.FACING) == facing.getOpposite())
+						{
+							return true;
+						}
+					}
+					
+					if((hb instanceof BlockSlab))
+					{
+						if(h.getValue(BlockSlab.HALF) == EnumBlockHalf.TOP)
+						{
+							return true;
+						}
+					}
+					
 					return false;
 				}
+				
 				return true;
 			}
-			if((headBlock instanceof BlockStairs) || (headBlock instanceof BlockSlab))
-			{
-				if(headBlock.canPlaceTorchOnTop(head, world, pos.add(0, 1, 0)))
-				{
-					return true;
-				}
-			}
 		}
-
-		//East
-		if(player.getHorizontalFacing() == EnumFacing.EAST)
+		
+		if((bb instanceof BlockPane) && !(hb instanceof BlockPane))
 		{
-			BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
-			IBlockState front = world.getBlockState(pos.add(0, 0, 0).east());
-			IBlockState top = world.getBlockState(pos.add(0, 1, 0).east());
-			IBlockState head = world.getBlockState(pos.add(0, 1, 0));
-			IBlockState body = world.getBlockState(pos.add(0, 0, 0));
-			Block block = front.getBlock();
-			Block topBlock = top.getBlock();
-			Block headBlock = head.getBlock();
-			Block bodyBlock = body.getBlock();
-
-			if((bodyBlock.isPassable(world, pos)))
+			return true;
+		}
+		
+		if(bb instanceof BlockStairs)
+		{
+			if((b.getValue(BlockStairs.FACING) == facing) && (b.getValue(BlockStairs.HALF) != EnumHalf.TOP))
 			{
-				if(!(block.isPassable(world, pos.east())))
-				{
-					if(topBlock instanceof BlockPane)
-					{
-						return true;
-					}
-					return true;
-				}
-			}
-			if((bodyBlock instanceof BlockStairs) || (bodyBlock instanceof BlockPane))
-			{
-				if(!(headBlock.isPassable(world, pos.add(0, 1, 0))))
-				{
-					return false;
-				}
 				return true;
 			}
-			if((headBlock instanceof BlockStairs) || (headBlock instanceof BlockSlab))
-			{
-				if(headBlock.canPlaceTorchOnTop(head, world, pos.add(0, 1, 0)))
-				{
-					return true;
-				}
-			}
 		}
-
-		//West
-		if(player.getHorizontalFacing() == EnumFacing.WEST)
+		
+		if((bb instanceof BlockSlab))
 		{
-			BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
-			IBlockState front = world.getBlockState(pos.add(0, 0, 0).west());
-			IBlockState top = world.getBlockState(pos.add(0, 1, 0).west());
-			IBlockState head = world.getBlockState(pos.add(0, 1, 0));
-			IBlockState body = world.getBlockState(pos.add(0, 0, 0));
-			Block block = front.getBlock();
-			Block topBlock = top.getBlock();
-			Block headBlock = head.getBlock();
-			Block bodyBlock = body.getBlock();
-
-			if((bodyBlock.isPassable(world, pos)))
+			if(b.getValue(BlockSlab.HALF) == EnumBlockHalf.BOTTOM)
 			{
-				if(!(block.isPassable(world, pos.west())))
-				{
-					if(topBlock instanceof BlockPane)
-					{
-						return true;
-					}
-					return true;
-				}
-			}
-			if((bodyBlock instanceof BlockStairs) || (bodyBlock instanceof BlockPane))
-			{
-				if(!(headBlock.isPassable(world, pos.add(0, 1, 0))) && !(headBlock instanceof BlockPane))
-				{
-					return false;
-				}
-				if((headBlock instanceof BlockPane) && topBlock.isPassable(world, pos.add(0, 1, 0).west()))
-				{
-					return false;
-				}
 				return true;
 			}
-			if((headBlock instanceof BlockStairs) || (headBlock instanceof BlockSlab))
-			{
-				if(headBlock.canPlaceTorchOnTop(head, world, pos.add(0, 1, 0)))
-				{
-					return true;
-				}
-			}
 		}
+		
 		return false;
 	}
 }

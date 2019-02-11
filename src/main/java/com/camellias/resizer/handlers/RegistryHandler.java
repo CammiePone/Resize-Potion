@@ -2,6 +2,7 @@ package com.camellias.resizer.handlers;
 
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.init.ModPotionTypes;
+import com.camellias.resizer.network.NetworkHandler;
 import com.camellias.resizer.util.IHasModel;
 
 import net.minecraft.item.Item;
@@ -48,6 +49,6 @@ public class RegistryHandler
 	
 	public static void preInitRegistries(FMLPreInitializationEvent event)
 	{
-		
+		NetworkHandler.init();
 	}
 }
