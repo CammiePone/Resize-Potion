@@ -2,6 +2,7 @@ package com.camellias.resizer.common.potions;
 
 import java.util.UUID;
 
+import com.artemis.artemislib.util.attributes.ArtemisLibAttributes;
 import com.camellias.resizer.Reference;
 import com.camellias.resizer.init.ModConfig;
 
@@ -21,6 +22,8 @@ public class PotionShrinking extends Potion
 		this.setPotionName("effect." + name);
 		this.setIconIndex(1, 0);
 		
+		this.registerPotionAttributeModifier(ArtemisLibAttributes.ENTITY_HEIGHT, uuid.toString(), -0.325D, 2);
+		this.registerPotionAttributeModifier(ArtemisLibAttributes.ENTITY_WIDTH, uuid.toString(), -0.325D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE, uuid.toString(), -1.0D, 2);
