@@ -141,6 +141,9 @@ public class PotionHandler
 			
 			if(growth == null)
 			{
+				player.jumpMovementFactor *= 1.75F;
+				player.fallDistance = 0.0F;
+				
 				if(shrinking.getAmplifier() >= 1)
 				{
 					if((ClimbingHandler.canClimb(player, player.getHorizontalFacing()) != false))
