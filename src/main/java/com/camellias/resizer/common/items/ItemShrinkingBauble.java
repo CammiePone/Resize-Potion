@@ -36,14 +36,7 @@ public class ItemShrinkingBauble extends ItemBauble implements IBauble
 	@Override
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player)
 	{
-		if(BaublesApi.isBaubleEquipped((EntityPlayer) player, ModItems.GROWTH_BAUBLE) > -1)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return BaublesApi.isBaubleEquipped((EntityPlayer) player, ModItems.GROWTH_BAUBLE) < 0;
 	}
 
 	@SideOnly(Side.CLIENT)
