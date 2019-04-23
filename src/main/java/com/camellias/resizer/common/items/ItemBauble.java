@@ -6,7 +6,6 @@ import com.camellias.resizer.Main;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.util.IHasModel;
 
-import baubles.api.render.IRenderBauble;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBauble extends Item implements IHasModel, IRenderBauble
+public class ItemBauble extends Item implements IHasModel
 {
 	//@SideOnly(Side.CLIENT)
 	//private static Model model;
@@ -93,22 +92,22 @@ public class ItemBauble extends Item implements IHasModel, IRenderBauble
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
 	
-	@Override
-	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, RenderType type, float ticks)
-	{
-		if(stack.getItem() instanceof ItemShrinkingBauble)
-		{
-			
-		}
-		else if(stack.getItem() instanceof ItemGrowthBauble)
-		{
-			
-		}
-		else
-		{
-			
-		}
-	}
+//	@Override
+//	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, RenderType type, float ticks)
+//	{
+//		if(stack.getItem() instanceof ItemShrinkingBauble)
+//		{
+//			
+//		}
+//		else if(stack.getItem() instanceof ItemGrowthBauble)
+//		{
+//			
+//		}
+//		else
+//		{
+//			
+//		}
+//	}
 	
 	@Override
 	public void registerModels()
