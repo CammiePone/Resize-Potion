@@ -1,6 +1,5 @@
 package com.camellias.resizer.common.items;
 
-import java.util.List;
 import java.util.Random;
 
 import com.camellias.resizer.Main;
@@ -10,8 +9,6 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.IBaublesItemHandler;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,7 +17,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ItemGrowthBauble extends ItemBauble implements IBauble

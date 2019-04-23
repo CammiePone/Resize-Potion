@@ -3,7 +3,6 @@ package com.camellias.resizer.common.potions;
 import java.util.UUID;
 
 import com.camellias.resizer.Reference;
-import com.camellias.resizer.init.ModConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;

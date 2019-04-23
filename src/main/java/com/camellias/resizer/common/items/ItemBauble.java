@@ -3,7 +3,6 @@ package com.camellias.resizer.common.items;
 import java.util.List;
 
 import com.camellias.resizer.Main;
-import com.camellias.resizer.init.ModConfig;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.util.IHasModel;
 

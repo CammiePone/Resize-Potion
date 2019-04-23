@@ -21,7 +21,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
@@ -393,6 +392,7 @@ public class PotionHandler
 	
 	
 	
+	@SuppressWarnings("rawtypes")
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void onLivingRenderPre(RenderLivingEvent.Pre event)
@@ -412,6 +412,7 @@ public class PotionHandler
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void onLivingRenderPost(RenderLivingEvent.Post event)

@@ -25,6 +25,7 @@ public class CommonProxy
 		throw new WrongSideException("Tried to get the player from a client-side MessageContext on the dedicated server");
 	}
 	
+	@SuppressWarnings("serial")
 	class WrongSideException extends RuntimeException
 	{
 		public WrongSideException(final String message)

@@ -7,6 +7,8 @@ import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -16,16 +18,19 @@ public class ClimbingHandler
 	
 	public static boolean movingForward(EntityPlayer player)
 	{
-		if(player.getHorizontalFacing().getAxisDirection() == player.getHorizontalFacing().getAxisDirection().POSITIVE)
+		player.getHorizontalFacing().getAxisDirection();
+		if(player.getHorizontalFacing().getAxisDirection() == AxisDirection.POSITIVE)
 		{
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().X) 
+			player.getHorizontalFacing().getAxis();
+			if(player.getHorizontalFacing().getAxis() == Axis.X) 
 			{
 				if(player.motionX > 0) 
 				{
 					return true;
 				}
 			}
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().Z) 
+			player.getHorizontalFacing().getAxis();
+			if(player.getHorizontalFacing().getAxis() == Axis.Z) 
 			{
 				if(player.motionZ > 0) 
 				{
@@ -35,14 +40,16 @@ public class ClimbingHandler
 		} 
 		else 
 		{
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().X) 
+			player.getHorizontalFacing().getAxis();
+			if(player.getHorizontalFacing().getAxis() == Axis.X) 
 			{
 				if(player.motionX < 0) 
 				{
 					return true;
 				}
 			}
-			if(player.getHorizontalFacing().getAxis() == player.getHorizontalFacing().getAxis().Z) 
+			player.getHorizontalFacing().getAxis();
+			if(player.getHorizontalFacing().getAxis() == Axis.Z) 
 			{
 				if(player.motionZ < 0) 
 				{
