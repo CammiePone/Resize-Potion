@@ -12,9 +12,9 @@ buildscript
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0"
-group = "com.yourname.modid"
-archivesBaseName = "modid"
+version = "2.1.1"
+group = "com.camellias.resizer"
+archivesBaseName = "resizingpotion"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava
