@@ -1,7 +1,6 @@
 package com.camellias.resizer.network;
 
 import com.camellias.resizer.Reference;
-import com.camellias.resizer.network.packets.PacketSpawnParticles;
 
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -13,7 +12,7 @@ public class NetworkHandler {
 	private static int nextId = 0;
 
 	public static void init() {
-		INSTANCE.registerMessage(PacketSpawnParticles.Handler.class, PacketSpawnParticles.class, next(), Side.CLIENT);
+		INSTANCE.registerMessage(PacketSpawnParticles::handle, PacketSpawnParticles.class, next(), Side.CLIENT);
 	}
 
 	public static int next() {
