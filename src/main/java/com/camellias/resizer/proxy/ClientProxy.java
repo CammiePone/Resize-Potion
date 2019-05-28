@@ -19,19 +19,19 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void spawnParticlesAt(UUID playerUUID) {
 		final Random rand = new Random();
-		EntityPlayer player = Minecraft.getMinecraft().world.getPlayerEntityByUUID(playerUUID);
+		final EntityPlayer player = Minecraft.getMinecraft().world.getPlayerEntityByUUID(playerUUID);
 		if (player != null) {
 			final double speedX = rand.nextGaussian() * 0.02D;
 			final double speedY = rand.nextGaussian() * 0.02D;
 			final double speedZ = rand.nextGaussian() * 0.02D;
 			for (int k = 0; k < 20; ++k) {
-				double partX = player.posX + rand.nextGaussian() * player.width * 2.0F;
-				double partY = player.posY + rand.nextFloat() * player.height * 2.0F;
-				double partZ = player.posZ + rand.nextGaussian() * player.width * 2.0F;
+				double partX = player.posX + (rand.nextGaussian() * player.width * 2.0F);
+				double partY = player.posY + (rand.nextFloat() * player.height * 2.0F);
+				double partZ = player.posZ + (rand.nextGaussian() * player.width * 2.0F);
 				player.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, partX, partY, partZ, speedX, speedY, speedZ);
-				partX = player.posX + rand.nextGaussian() * player.width * 2.0F;
-				partY = player.posY + rand.nextFloat() * player.height * 2.0F;
-				partZ = player.posZ + rand.nextGaussian() * player.width * 2.0F;
+				partX = player.posX + (rand.nextGaussian() * player.width * 2.0F);
+				partY = player.posY + (rand.nextFloat() * player.height * 2.0F);
+				partZ = player.posZ + (rand.nextGaussian() * player.width * 2.0F);
 				player.world.spawnParticle(EnumParticleTypes.CLOUD, partX, partY, partZ, speedX, speedY, speedZ);
 			}
 		}

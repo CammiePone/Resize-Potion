@@ -22,14 +22,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBauble extends Item implements IHasModel {
+public class ItemInertTrinket extends Item implements IHasModel {
 
-	public ItemBauble(String name) {
+	public ItemInertTrinket(String name) {
 		this.setTranslationKey(name);
 		this.setRegistryName(name);
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.maxStackSize = 1;
-
 		ModItems.ITEMS.add(this);
 	}
 
@@ -62,6 +61,7 @@ public class ItemBauble extends Item implements IHasModel {
 			}
 
 			player.removePotionEffect(Main.SHRINKING);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		}
 
 		if (player.isPotionActive(Main.GROWTH) && !growth.getIsAmbient()) {
@@ -71,6 +71,7 @@ public class ItemBauble extends Item implements IHasModel {
 			}
 
 			player.removePotionEffect(Main.GROWTH);
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		}
 
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
