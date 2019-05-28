@@ -26,8 +26,9 @@ minecraft
 {
     version = "1.12.2-14.23.5.2795"
     runDir = "run"
-    
     mappings = "stable_39"
+    replace '@VERSION@', project.version
+    replace '@FINGERPRINT@', project.findProperty('signSHA1')
 }
 
 repositories
@@ -74,3 +75,19 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar
