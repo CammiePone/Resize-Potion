@@ -12,7 +12,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public abstract class PacketOnResize implements IMessage
+public class PacketOnResize implements IMessage
 {
 	public int entityID;
 	private boolean shouldSpawnParticles;
@@ -82,6 +82,7 @@ public abstract class PacketOnResize implements IMessage
 							xSpeed, ySpeed, zSpeed);
 				}
 			}
+			
 			return entity;
 		}
 		return null;

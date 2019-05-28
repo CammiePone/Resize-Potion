@@ -2,6 +2,7 @@ package com.camellias.resizer.common.potions;
 
 import java.util.UUID;
 
+import com.artemis.artemislib.util.attributes.ArtemisLibAttributes;
 import com.camellias.resizer.Reference;
 
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,8 @@ public class PotionGrowth extends Potion
 		this.setPotionName("effect." + name);
 		this.setIconIndex(0, 0);
 		
+		this.registerPotionAttributeModifier(ArtemisLibAttributes.ENTITY_HEIGHT, uuid.toString(), 0.5D, 2);
+		this.registerPotionAttributeModifier(ArtemisLibAttributes.ENTITY_WIDTH, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, uuid.toString(), -0.2D, 2);
