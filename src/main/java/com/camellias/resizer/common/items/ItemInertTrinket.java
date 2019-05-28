@@ -23,13 +23,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemInertTrinket extends Item implements IHasModel {
-
 	public ItemInertTrinket(String name) {
 		this.setTranslationKey(name);
 		this.setRegistryName(name);
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.maxStackSize = 1;
-		ModItems.ITEMS.add(this);
 	}
 
 	@SideOnly(Side.CLIENT)

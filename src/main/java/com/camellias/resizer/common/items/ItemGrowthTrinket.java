@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemGrowthTrinket extends ItemActiveTrinket {
+	
 	public ItemGrowthTrinket(String name) {
 		super(name);
 	}

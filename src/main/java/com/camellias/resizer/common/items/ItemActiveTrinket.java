@@ -28,7 +28,6 @@ public class ItemActiveTrinket extends Item implements IBauble, IHasModel {
 		this.setRegistryName(name);
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.maxStackSize = 1;
-		ModItems.ITEMS.add(this);
 	}
 
 	@Override

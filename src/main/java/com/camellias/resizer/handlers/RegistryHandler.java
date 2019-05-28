@@ -3,7 +3,6 @@ package com.camellias.resizer.handlers;
 import com.camellias.resizer.init.ModItems;
 import com.camellias.resizer.init.ModPotionTypes;
 import com.camellias.resizer.network.NetworkHandler;
-import com.camellias.resizer.util.IHasModel;
 
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionType;
@@ -16,21 +15,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @EventBusSubscriber
 public class RegistryHandler {
+	
 	@SubscribeEvent
 	public static void onItemRegister(RegistryEvent.Register<Item> event) {
 		if (Loader.isModLoaded("baubles")) {
-			event.getRegistry().registerAll(ModItems.ITEMS.toArray(new Item[0]));
+			event.getRegistry().registerAll(ModItems.INERT_BAUBLE, ModItems.GROWTH_BAUBLE, ModItems.SHRINKING_BAUBLE);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onModelRegister(ModelRegistryEvent event) {
 		if (Loader.isModLoaded("baubles")) {
-			for (final Item item : ModItems.ITEMS) {
-				if (item instanceof IHasModel) {
-					((IHasModel) item).registerModels();
-				}
-			}
+			ModItems.INERT_BAUBLE.registerModels();
+			ModItems.GROWTH_BAUBLE.registerModels();
+			ModItems.SHRINKING_BAUBLE.registerModels();
 		}
 	}
 
