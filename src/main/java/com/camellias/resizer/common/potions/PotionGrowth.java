@@ -25,7 +25,7 @@ public class PotionGrowth extends Potion {
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, uuid.toString(), 0.5D, 2);
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, uuid.toString(), -0.2D, 2);
 
-		this.setRegistryName(new ResourceLocation(name));
+		this.setRegistryName(new ResourceLocation(Reference.MODID, name));
 	}
 
 	@Override
