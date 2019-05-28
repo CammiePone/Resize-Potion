@@ -16,41 +16,30 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(
-	modid = Reference.MODID, 
-	name = Reference.NAME, 
-	version = Reference.VERSION, 
-	acceptedMinecraftVersions = Reference.ACCEPTEDVERSIONS, 
-	dependencies = Reference.DEPENDENCIES)
-public class Main 
-{
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, acceptedMinecraftVersions = Reference.ACCEPTEDVERSIONS, dependencies = Reference.DEPENDENCIES)
+public class Main {
 	public static File config;
 	public static final Potion SHRINKING = new PotionShrinking("shrinking");
 	public static final Potion GROWTH = new PotionGrowth("growth");
-	
-	@Instance
-	public static Main instance;
-	
-	//----Proxy----//
-	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.COMMON_PROXY_CLASS)
-	public static CommonProxy proxy;
-	
-	//----Initialization----//
+
+	@Instance public static Main instance;
+
+	// ----Proxy----//
+	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.COMMON_PROXY_CLASS) public static CommonProxy proxy;
+
+	// ----Initialization----//
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit(FMLPreInitializationEvent event) {
 		RegistryHandler.preInitRegistries(event);
 	}
-	
+
 	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		
+	public void init(FMLInitializationEvent event) {
+
 	}
-	
+
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		
+	public void postInit(FMLPostInitializationEvent event) {
+
 	}
 }

@@ -9,10 +9,9 @@ import com.camellias.resizer.common.items.ItemShrinkingBauble;
 
 import net.minecraft.item.Item;
 
-public class ModItems
-{
+public class ModItems {
 	public static final List<Item> ITEMS = new ArrayList<Item>();
-	
+
 	public static final Item INERT_BAUBLE = new ItemBauble("inert_bauble");
 	public static final Item SHRINKING_BAUBLE = new ItemShrinkingBauble("shrinking_bauble");
 	public static final Item GROWTH_BAUBLE = new ItemGrowthBauble("growth_bauble");
