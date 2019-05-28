@@ -55,11 +55,11 @@ public class ItemGrowthBauble extends ItemBauble implements IBauble {
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if ((player.ticksExisted % 10) == 0) {
-			player.addPotionEffect(new PotionEffect(Main.GROWTH, 20, 0, true, false));
+		if ((player.ticksExisted % 20) == 0) {
+			player.addPotionEffect(new PotionEffect(Main.GROWTH, 21, 0, true, false));
 		}
 	}
-
+	
 	@Override
 	public boolean hasEffect(ItemStack stack) {
 		return true;
@@ -102,7 +102,6 @@ public class ItemGrowthBauble extends ItemBauble implements IBauble {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		if (!world.isRemote) {
 			final IBaublesItemHandler baubles = BaublesApi.getBaublesHandler(player);
-
 			for (int i = 0; i < baubles.getSlots(); i++) {
 				if (((baubles.getStackInSlot(i) == null) || baubles.getStackInSlot(i).isEmpty()) && baubles.isItemValidForSlot(i, player.getHeldItem(hand), player)) {
 					baubles.setStackInSlot(i, player.getHeldItem(hand).copy());
