@@ -17,6 +17,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
@@ -34,7 +35,14 @@ public class ItemShrinkingBauble extends ItemBauble implements IBauble {
 
 	@Override
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-		return BaublesApi.isBaubleEquipped((EntityPlayer) player, ModItems.GROWTH_BAUBLE) < 0;
+		IBaublesItemHandler handler = BaublesApi.getBaublesHandler((EntityPlayer) player);
+		for (int a=0;a<handler.getSlots();a++) {
+			Item i = handler.getStackInSlot(a).getItem();	
+			if (i == ModItems.GROWTH_BAUBLE || i == ModItems.SHRINKING_BAUBLE) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@SideOnly(Side.CLIENT)
