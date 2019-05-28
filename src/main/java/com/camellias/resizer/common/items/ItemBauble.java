@@ -23,8 +23,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBauble extends Item implements IHasModel {
-	// @SideOnly(Side.CLIENT)
-	// private static Model model;
 
 	public ItemBauble(String name) {
 		this.setTranslationKey(name);
@@ -57,45 +55,26 @@ public class ItemBauble extends Item implements IHasModel {
 		final PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 		final PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
 
-		if (!(stack.getItem() instanceof ItemShrinkingBauble) || !(stack.getItem() instanceof ItemGrowthBauble)) {
-			if (player.isPotionActive(Main.SHRINKING) && (shrinking.getIsAmbient() == false)) {
-				if (!world.isRemote) {
-					player.addItemStackToInventory(new ItemStack(ModItems.SHRINKING_BAUBLE));
-					stack.shrink(1);
-				}
-
-				player.removePotionEffect(Main.SHRINKING);
+		if (player.isPotionActive(Main.SHRINKING) && (shrinking.getIsAmbient() == false)) {
+			if (!world.isRemote) {
+				player.addItemStackToInventory(new ItemStack(ModItems.SHRINKING_BAUBLE));
+				stack.shrink(1);
 			}
 
-			if (player.isPotionActive(Main.GROWTH) && (growth.getIsAmbient() == false)) {
-				if (!world.isRemote) {
-					player.addItemStackToInventory(new ItemStack(ModItems.GROWTH_BAUBLE));
-					stack.shrink(1);
-				}
+			player.removePotionEffect(Main.SHRINKING);
+		}
 
-				player.removePotionEffect(Main.GROWTH);
+		if (player.isPotionActive(Main.GROWTH) && !growth.getIsAmbient()) {
+			if (!world.isRemote) {
+				player.addItemStackToInventory(new ItemStack(ModItems.GROWTH_BAUBLE));
+				stack.shrink(1);
 			}
+
+			player.removePotionEffect(Main.GROWTH);
 		}
 
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
-
-	// @Override
-	// public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, RenderType type, float ticks)
-	// {
-	// if(stack.getItem() instanceof ItemShrinkingBauble)
-	// {
-	//
-	// }
-	// else if(stack.getItem() instanceof ItemGrowthBauble)
-	// {
-	//
-	// }
-	// else
-	// {
-	//
-	// }
-	// }
 
 	@Override
 	public void registerModels() {
