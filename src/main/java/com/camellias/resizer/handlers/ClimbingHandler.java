@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 public class ClimbingHandler {
 	// -----ClimbingHandler.java was made by XzeroAir, so go check him out, as he's waaaay more talented than me.-----//
+	// XzeroAir: I'm Not Really //
 
 	public static boolean movingForward(EntityLivingBase player, EnumFacing facing) {
 		if (((facing.getDirectionVec().getX() * player.motionX) > 0) || ((facing.getDirectionVec().getZ() * player.motionZ) > 0)) {
@@ -22,34 +23,6 @@ public class ClimbingHandler {
 		}
 
 		return false;
-	}
-
-	public static double moveX(EntityLivingBase player) {
-		if (player.motionX < 0) {
-			return -player.motionX;
-		}
-
-		return player.motionX;
-	}
-
-	public static double moveZ(EntityLivingBase player) {
-		if (player.motionZ < 0) {
-			return -player.motionZ;
-		}
-
-		return player.motionZ;
-	}
-
-	public static double moveY(EntityLivingBase player) {
-		if (player.motionY < 0) {
-			return -player.motionY;
-		}
-
-		return player.motionY;
-	}
-
-	public static double movingVelocity(EntityPlayer player) {
-		return 0;
 	}
 
 	public static boolean isHeadspaceFree(World world, BlockPos pos, int height) {
@@ -84,47 +57,44 @@ public class ClimbingHandler {
 		final boolean hbpass = hb.isPassable(world, pos.add(0, 1, 0));
 		final boolean bbpass = bb.isPassable(world, pos);
 
-		if (bbpass) {
-			if (!fbpass) {
-				if ((!(tbpass || hbpass))) {
-					if ((tb instanceof BlockPane)) {
+		if(bbpass) {
+			if(!fbpass) {
+				if((!(tbpass || hbpass))) {
+					if((tb instanceof BlockPane)) {
 
 					}
-					if ((hb instanceof BlockStairs)) {
-						if (h.getValue(BlockStairs.FACING) == facing.getOpposite()) {
+					if((hb instanceof BlockStairs)) {
+						if(h.getValue(BlockStairs.FACING) == facing.getOpposite()) {
 							return true;
 						}
 					}
-
-					if ((hb instanceof BlockSlab)) {
-						if (h.getValue(BlockSlab.HALF) == EnumBlockHalf.TOP) {
-							return true;
+					if((hb instanceof BlockSlab)) {
+						if(!h.isNormalCube()){
+							if(h.getValue(BlockSlab.HALF) == EnumBlockHalf.TOP) {
+								return true;
+							}
 						}
 					}
-
 					return false;
 				}
-
 				return true;
 			}
 		}
-
-		if ((bb instanceof BlockPane) && !(hb instanceof BlockPane)) {
+		if((bb instanceof BlockPane) && !(hb instanceof BlockPane)) {
 			return true;
 		}
-
-		if (bb instanceof BlockStairs) {
-			if ((b.getValue(BlockStairs.FACING) == facing) && (b.getValue(BlockStairs.HALF) != EnumHalf.TOP)) {
+		if(bb instanceof BlockStairs) {
+			if((b.getValue(BlockStairs.FACING) == facing) && (b.getValue(BlockStairs.HALF) != EnumHalf.TOP)) {
 				return true;
 			}
 		}
-
-		if ((bb instanceof BlockSlab)) {
-			if (b.getValue(BlockSlab.HALF) == EnumBlockHalf.BOTTOM) {
-				return true;
+		if((bb instanceof BlockSlab)) {
+			if(!h.isNormalCube()){
+				if(b.getValue(BlockSlab.HALF) == EnumBlockHalf.BOTTOM) {
+					return true;
+				}
 			}
 		}
-
 		return false;
 	}
 }
