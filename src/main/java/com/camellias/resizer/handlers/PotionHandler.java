@@ -72,7 +72,7 @@ public class PotionHandler {
 	}
 
 	@SubscribeEvent
-	public static void onLivingump(LivingJumpEvent event) {
+	public static void onLivingJump(LivingJumpEvent event) {
 		final EntityLivingBase entity = event.getEntityLiving();
 		final PotionEffect shrinking = entity.getActivePotionEffect(Main.SHRINKING);
 		final PotionEffect growth = entity.getActivePotionEffect(Main.GROWTH);
