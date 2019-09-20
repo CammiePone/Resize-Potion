@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @EventBusSubscriber
 public class PotionHandler {
-
+	
 	@SubscribeEvent
 	public static void isPotionApplicable(PotionApplicableEvent event) {
 		setPotionApplicability(event, Main.SHRINKING);
@@ -44,30 +44,28 @@ public class PotionHandler {
 		final PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
 
 		if ((shrinking != null) || (growth != null)) {
-			player.stepHeight = player.height / 3F;
-
 			if (growth == null) {
 				player.jumpMovementFactor *= 1.75F;
 				player.fallDistance = 0.0F;
-
 				if (shrinking.getAmplifier() >= 1) {
-					if ((ClimbingHandler.canClimb(player, player.getHorizontalFacing()) != false)) {
-						if (player.collidedHorizontally) {
-							if (!player.isSneaking()) {
-								player.motionY = 0.1F;
-							}
-
-							if (player.isSneaking()) {
-								player.motionY = 0.0F;
-							}
-						}
-					}
+					updateClimbingStatus(player);
 				}
 			}
+			player.stepHeight = player.height / 3;
 		}
+		
+	}
 
-		if ((growth == null) && (shrinking == null)) {
-			player.stepHeight = 0.6F;
+	private static void updateClimbingStatus(final EntityPlayer player) {
+		if ((ClimbingHandler.canClimb(player, player.getHorizontalFacing()) != false)) {
+			if (player.collidedHorizontally) {
+				if (!player.isSneaking()) {
+					player.motionY = 0.1F;
+				}
+				if (player.isSneaking()) {
+					player.motionY = 0.0F;
+				}
+			}
 		}
 	}
 
