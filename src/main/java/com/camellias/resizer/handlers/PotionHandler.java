@@ -39,8 +39,6 @@ public class PotionHandler {
 
 	@SubscribeEvent
 	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
-		// ----Thank you to XzeroAir from the MMD Discord for helping out with the hitbox changes. Life saver, that guy.----//
-
 		final EntityPlayer player = event.player;
 		final PotionEffect growth = player.getActivePotionEffect(Main.GROWTH);
 		final PotionEffect shrinking = player.getActivePotionEffect(Main.SHRINKING);
