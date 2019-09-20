@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, acceptedMinecraftVersions = Reference.ACCEPTEDVERSIONS, dependencies = Reference.DEPENDENCIES)
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, acceptedMinecraftVersions = Reference.ACCEPTEDVERSIONS, dependencies = Reference.DEPENDENCIES, certificateFingerprint = Reference.FINGERPRINT)
 public class Main {
 	public static File config;
 	public static final Potion SHRINKING = new PotionShrinking("shrinking");
