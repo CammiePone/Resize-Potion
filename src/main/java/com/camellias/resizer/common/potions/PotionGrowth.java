@@ -3,6 +3,7 @@ package com.camellias.resizer.common.potions;
 import java.util.UUID;
 
 import com.artemis.artemislib.util.attributes.ArtemisLibAttributes;
+import com.camellias.resizer.Main;
 import com.camellias.resizer.Reference;
 
 import net.minecraft.client.Minecraft;
@@ -31,6 +32,12 @@ public class PotionGrowth extends Potion {
 		this.setRegistryName(new ResourceLocation(Reference.MODID, name));
 	}
 
+	@Override
+	public void applyAttributesModifiersToEntity(EntityLivingBase entityLivingBaseIn, AbstractAttributeMap attributeMapIn, int amplifier) {
+		entityLivingBaseIn.removePotionEffect(Main.SHRINKING);
+		super.applyAttributesModifiersToEntity(entityLivingBaseIn, attributeMapIn, amplifier);
+	}
+	
 	@Override
 	public void removeAttributesModifiersFromEntity(EntityLivingBase entity, AbstractAttributeMap attributeMapIn, int amplifier) {
 		super.removeAttributesModifiersFromEntity(entity, attributeMapIn, amplifier);
