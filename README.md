@@ -21,7 +21,7 @@ Shrinking Potion Stats:
 
 ### Requirements
 - Minecraft 1.12.2 (**Do NOT ask for backports or updates please**)
-- Artemis Lib (Ideally version 1.0.6 or newer) ([Download](https://www.curseforge.com/minecraft/mc-mods/artemislib)]
+- Artemis Lib (Ideally version 1.0.6 or newer) ([Download](https://www.curseforge.com/minecraft/mc-mods/artemislib))
 - A reasonably recent version of Minecraft Forge. (Install through your preferred supported launcher, like Twitch, MultiMC5 and GDLauncher)
 
 ### Optional Mods
