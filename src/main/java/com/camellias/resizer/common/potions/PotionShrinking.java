@@ -40,6 +40,14 @@ public class PotionShrinking extends Potion {
 			entity.stepHeight = 0.6f;
 		}
 	}
+	
+	@Override
+	public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
+		if (modifier.getID().equals(uuid_own)) {
+			return -1d + (1d/(1<<(amplifier + 1))); //Shrinking now has a -1 + 1/(2^lvl) reduction in size (-0% -> -50% -> -75% -> -87.5%...)
+		}
+		return super.getAttributeModifierAmount(amplifier, modifier);
+	}
 
 	@Override
 	public boolean hasStatusIcon() {
