@@ -6,7 +6,7 @@ public class Reference {
 	public static final String NAME = "Resizing Potion";
 	public static final String VERSION = "@VERSION@";
 	public static final String ACCEPTEDVERSIONS = "[1.12.2]";
-	public static final String DEPENDENCIES = "required-after:forge@[14.23.5.2795,];" + "required-after:artemislib@[1.0.0,];";
+	public static final String DEPENDENCIES = "required-after:artemislib@[1.0.6,];";
 	public static final String FINGERPRINT = "@FINGERPRINT@";
 
 	// Proxies

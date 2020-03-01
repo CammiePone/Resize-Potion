@@ -4,39 +4,15 @@ import com.camellias.resizer.Main;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @EventBusSubscriber
 public class PotionHandler {
 	
-	@SubscribeEvent
-	public static void isPotionApplicable(PotionApplicableEvent event) {
-		setPotionApplicability(event, Main.SHRINKING);
-		setPotionApplicability(event, Main.GROWTH);
-	}
-
-	/**
-	 * Allows or denies the addition of a shrinking or growth resize potion
-	 *
-	 * @param event
-	 *            potion applicability event
-	 * @param potionTarget
-	 *            shrinking or growth resize potion
-	 */
-	private static void setPotionApplicability(PotionApplicableEvent event, Potion potionTarget) {
-		if (event.getPotionEffect().getPotion() == potionTarget) {
-			final Potion potionOld = potionTarget == Main.GROWTH ? Main.SHRINKING : Main.GROWTH;
-			event.setResult(event.getEntityLiving().isPotionActive(potionOld) ? Event.Result.DENY : Event.Result.ALLOW);
-		}
-	}
-
 	@SubscribeEvent
 	public static void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
 		final EntityPlayer player = event.player;
