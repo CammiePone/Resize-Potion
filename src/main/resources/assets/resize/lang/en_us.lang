@@ -2,12 +2,12 @@ item.inert_bauble.name=Empty Trinket
 item.shrinking_bauble.name=Shrinking Trinket
 item.growth_bauble.name=Growth Trinket
 
-potion.effect.shrinking=Potion of Resizing
-potion.effect.growth=Potion of Resizing
-splash_potion.effect.shrinking=Splash Potion of Resizing
-splash_potion.effect.growth=Splash Potion of Resizing
-lingering_potion.effect.shrinking=Lingering Potion of Resizing
-lingering_potion.effect.growth=Lingering Potion of Resizing
+potion.effect.shrinking=Potion of Shrinking
+potion.effect.growth=Potion of Growth
+splash_potion.effect.shrinking=Splash Potion of Shrinking
+splash_potion.effect.growth=Splash Potion of Growth
+lingering_potion.effect.shrinking=Lingering Potion of Shrinking
+lingering_potion.effect.growth=Lingering Potion of Growth
 tipped_arrow.effect.shrinking=Arrow of Shrinking
 tipped_arrow.effect.growth=Arrow of Growth
 
