@@ -18,11 +18,9 @@ shrinking.info=Зелье уменьшения
 growth.info=Зелье роста
 shift.prompt=<<Зажмите SHIFT для информации>
 whenworn.string=Когда надето:
-item.inert_bauble.info1=Используетсся когда активно
-item.inert_bauble.info2=Уменьшение или Увеличение.
+item.inert_bauble.info=Используетсся когда активно Уменьшение или Увеличение.
 
-item.shrinking_bauble.info1= - Уменьшает размер игрока
-item.shrinking_bauble.info2=    на 50%%.
+item.shrinking_bauble.info=Уменьшает размер игрока на 50%%.
 item.shrinking_bauble.speed=+50%% скорости
 item.shrinking_bauble.attackspeed=+50%% скорости атаки
 item.shrinking_bauble.jumpheight=+250%% высоты прыжка
@@ -30,8 +28,7 @@ item.shrinking_bauble.attackdamage=-25%% силы атаки
 item.shrinking_bauble.knockbackresist=-50%% стойкости
 item.shrinking_bauble.stepheight=-25%% высоты шага
 
-item.growth_bauble.info1= - Увеличивает размер игрока
-item.growth_bauble.info2=    на 150%%.
+item.growth_bauble.info=Увеличивает размер игрока на 150%%.
 item.growth_bauble.attackdamage=+50%% силы атаки
 item.growth_bauble.knockbackresist=+50%% стойкости
 item.growth_bauble.stepheight=+25%% высоты шага

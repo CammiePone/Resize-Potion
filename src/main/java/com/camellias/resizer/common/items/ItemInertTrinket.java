@@ -34,12 +34,10 @@ public class ItemInertTrinket extends Item implements IHasModel {
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		final String shift = TextFormatting.YELLOW + I18n.format("shift.prompt");
-		final String info1 = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info1");
-		final String info2 = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info2");
+		final String info = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info");
 
 		if (GuiScreen.isShiftKeyDown()) {
-			tooltip.add(info1);
-			tooltip.add(info2);
+			tooltip.add(info);
 		} else {
 			tooltip.add(shift);
 		}

@@ -18,11 +18,9 @@ shrinking.info=Pozione del restringimento
 growth.info=Pozione della crescita
 shift.prompt=<<Premi SHIFT per avere più info>>
 whenworn.string=Quando indossato:
-item.inert_bauble.info1=Usa questo oggetto mentre restringimento o crescita
-item.inert_bauble.info2=sono presenti sul giocatore per catturare l'effetto
+item.inert_bauble.info=Usa questo oggetto mentre restringimento o crescita sono presenti sul giocatore per catturarne l'effetto
 
-item.shrinking_bauble.info1= - Rimpicciolisce il giocatore al 50%% 
-item.shrinking_bauble.info2=    della sua dimensione originale.
+item.shrinking_bauble.info=Rimpicciolisce il giocatore al 50%% della sua dimensione originale.
 item.shrinking_bauble.speed=+50%% Velocità
 item.shrinking_bauble.attackspeed=+50%% Velocità d'attacco
 item.shrinking_bauble.jumpheight=+250%% Altezza salti
@@ -30,8 +28,7 @@ item.shrinking_bauble.attackdamage=-25%% Potenza d'attacco
 item.shrinking_bauble.knockbackresist=-50%% Resistenza al contraccolpo
 item.shrinking_bauble.stepheight=-25%% Salita ai gradini
 
-item.growth_bauble.info1= - Ingrandisce il giocatore al 150%% 
-item.growth_bauble.info2=    della sua dimensione originale.
+item.growth_bauble.info=Ingrandisce il giocatore al 150%% della sua dimensione originale.
 item.growth_bauble.attackdamage=+50%% Potenza d'attacco
 item.growth_bauble.knockbackresist=+50%% Resistenza al contraccolpo
 item.growth_bauble.stepheight=+25%% Salita ai gradini

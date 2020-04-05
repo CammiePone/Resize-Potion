@@ -28,8 +28,7 @@ public class ItemShrinkingTrinket extends ItemActiveTrinket {
 		final String shift = TextFormatting.YELLOW + I18n.format("shift.prompt");
 		final String whenworn = TextFormatting.DARK_PURPLE + I18n.format("whenworn.string");
 
-		final String info1 = TextFormatting.AQUA + I18n.format(this.getTranslationKey() + ".info1");
-		final String info2 = TextFormatting.AQUA + I18n.format(this.getTranslationKey() + ".info2");
+		final String info = TextFormatting.AQUA + I18n.format(this.getTranslationKey() + ".info");
 
 		final String speed = TextFormatting.BLUE + I18n.format(this.getTranslationKey() + ".speed");
 		final String attackspeed = TextFormatting.BLUE + I18n.format(this.getTranslationKey() + ".attackspeed");
@@ -42,15 +41,12 @@ public class ItemShrinkingTrinket extends ItemActiveTrinket {
 		tooltip.add(shrinking);
 
 		if (GuiScreen.isShiftKeyDown()) {
-			tooltip.add(info1);
-			tooltip.add(info2);
-
+			tooltip.add(info);
 			tooltip.add("");
 			tooltip.add(whenworn);
 			tooltip.add(speed);
 			tooltip.add(attackspeed);
 			tooltip.add(jumpheight);
-
 			tooltip.add(attackdamage);
 			tooltip.add(knockbackresist);
 			tooltip.add(stepheight);

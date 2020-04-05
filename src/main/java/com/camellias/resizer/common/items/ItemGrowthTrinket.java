@@ -34,8 +34,7 @@ public class ItemGrowthTrinket extends ItemActiveTrinket {
 		final String growth = TextFormatting.GOLD + I18n.format("growth.info");
 		final String shift = TextFormatting.YELLOW + I18n.format("shift.prompt");
 		final String whenworn = TextFormatting.DARK_PURPLE + I18n.format("whenworn.string");
-		final String info1 = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info1");
-		final String info2 = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info2");
+		final String info = TextFormatting.YELLOW + I18n.format(this.getTranslationKey() + ".info");
 		final String attackdamage = TextFormatting.BLUE + I18n.format(this.getTranslationKey() + ".attackdamage");
 		final String knockbackresist = TextFormatting.BLUE + I18n.format(this.getTranslationKey() + ".knockbackresist");
 		final String stepheight = TextFormatting.BLUE + I18n.format(this.getTranslationKey() + ".stepheight");
@@ -45,9 +44,7 @@ public class ItemGrowthTrinket extends ItemActiveTrinket {
 		tooltip.add(growth);
 
 		if (GuiScreen.isShiftKeyDown()) {
-			tooltip.add(info1);
-			tooltip.add(info2);
-
+			tooltip.add(info);
 			tooltip.add("");
 			tooltip.add(whenworn);
 			tooltip.add(attackdamage);
