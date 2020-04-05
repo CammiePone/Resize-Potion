@@ -1,0 +1,47 @@
+item.inert_bauble.name=Amuleto Vuoto
+item.shrinking_bauble.name=Amuleto del restringimento
+item.growth_bauble.name=Amuleto della crescita
+
+potion.effect.shrinking=Pozione del restringimento
+potion.effect.growth=Pozione della crescita
+splash_potion.effect.shrinking=Pozione da lancio del restringimento
+splash_potion.effect.growth=Pozione da lancio della crescita
+lingering_potion.effect.shrinking=Pozione persistente del restringimento
+lingering_potion.effect.growth=Pozione persistente della crescita
+tipped_arrow.effect.shrinking=Freccia del restringimento
+tipped_arrow.effect.growth=Freccia della crescita
+
+effect.shrinking=Restringimento
+effect.growth=Crescita
+
+shrinking.info=Pozione del restringimento
+growth.info=Pozione della crescita
+shift.prompt=<<Premi SHIFT per avere più info>>
+whenworn.string=Quando indossato:
+item.inert_bauble.info1=Usa questo oggetto mentre restringimento o crescita
+item.inert_bauble.info2=sono presenti sul giocatore per catturare l'effetto
+
+item.shrinking_bauble.info1= - Rimpicciolisce il giocatore al 50%% 
+item.shrinking_bauble.info2=    della sua dimensione originale.
+item.shrinking_bauble.speed=+50%% Velocità
+item.shrinking_bauble.attackspeed=+50%% Velocità d'attacco
+item.shrinking_bauble.jumpheight=+250%% Altezza salti
+item.shrinking_bauble.attackdamage=-25%% Potenza d'attacco
+item.shrinking_bauble.knockbackresist=-50%% Resistenza al contraccolpo
+item.shrinking_bauble.stepheight=-25%% Salita ai gradini
+
+item.growth_bauble.info1= - Ingrandisce il giocatore al 150%% 
+item.growth_bauble.info2=    della sua dimensione originale.
+item.growth_bauble.attackdamage=+50%% Potenza d'attacco
+item.growth_bauble.knockbackresist=+50%% Resistenza al contraccolpo
+item.growth_bauble.stepheight=+25%% Salita ai gradini
+item.growth_bauble.jumpheight=+200%% Altezza salti
+item.growth_bauble.attackspeed=-20%% Velocità d'attacco
+
+config.resize.title=Configurazione di Resizing Potion
+config.resize.recipe=Oggetto per creare la pozione
+config.resize.recipe.tooltip=Cambia gli oggetti utilizzati per creare la pozione
+config.resize.recipe.potion.shrinking=Ingrediente per la pozione del restringimento
+config.resize.recipe.potion.shrinking.tooltip=default: minecraft:brown_mushroom
+config.resize.recipe.potion.growth=Ingrediente per la pozione della crescita
+config.resize.recipe.potion.growth.tooltip=default: minecraft:red_mushroom
