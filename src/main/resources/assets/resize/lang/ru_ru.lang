@@ -1,0 +1,47 @@
+item.inert_bauble.name=Обычный брелок
+item.shrinking_bauble.name=Брелок с эффектом уменьшения
+item.growth_bauble.name=Брелок с эффектом роста
+
+potion.effect.shrinking=Зелье уменьшения
+potion.effect.growth=Зелье роста
+splash_potion.effect.shrinking=Взрывное зелье уменьшения
+splash_potion.effect.growth=Взрывное зелье роста
+lingering_potion.effect.shrinking=Туманное зелье уменьшения
+lingering_potion.effect.growth=Туманное зелье роста
+tipped_arrow.effect.shrinking=Стрела уменьшения
+tipped_arrow.effect.growth=Стрела роста
+
+effect.shrinking=Уменьшение
+effect.growth=Рост
+
+shrinking.info=Зелье уменьшения
+growth.info=Зелье роста
+shift.prompt=<<Зажмите SHIFT для информации>
+whenworn.string=Когда надето:
+item.inert_bauble.info1=Используетсся когда активно
+item.inert_bauble.info2=Уменьшение или Увеличение.
+
+item.shrinking_bauble.info1= - Уменьшает размер игрока
+item.shrinking_bauble.info2=    на 50%%.
+item.shrinking_bauble.speed=+50%% скорости
+item.shrinking_bauble.attackspeed=+50%% скорости атаки
+item.shrinking_bauble.jumpheight=+250%% высоты прыжка
+item.shrinking_bauble.attackdamage=-25%% силы атаки
+item.shrinking_bauble.knockbackresist=-50%% стойкости
+item.shrinking_bauble.stepheight=-25%% высоты шага
+
+item.growth_bauble.info1= - Увеличивает размер игрока
+item.growth_bauble.info2=    на 150%%.
+item.growth_bauble.attackdamage=+50%% силы атаки
+item.growth_bauble.knockbackresist=+50%% стойкости
+item.growth_bauble.stepheight=+25%% высоты шага
+item.growth_bauble.jumpheight=+200%% высоты прыжка
+item.growth_bauble.attackspeed=-20%% скорости атаки
+
+config.resize.title=GUI настройки Resizing Potion
+config.resize.recipe=Ингридиент зелья
+config.resize.recipe.tooltip=Предмет, нужный для создания зелья в варочной стойке
+config.resize.recipe.potion.shrinking=Ингридиент Зелья уменьшения
+config.resize.recipe.potion.shrinking.tooltip=по умолчанию: minecraft:brown_mushroom
+config.resize.recipe.potion.growth=Ингридиент Зелья роста
+config.resize.recipe.potion.growth.tooltip=по умолчанию: minecraft:red_mushroom
