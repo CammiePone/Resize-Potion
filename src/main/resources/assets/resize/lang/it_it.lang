@@ -42,6 +42,4 @@ config.resize.title=Configurazione di Resizing Potion
 config.resize.recipe=Oggetto per creare la pozione
 config.resize.recipe.tooltip=Cambia gli oggetti utilizzati per creare la pozione
 config.resize.recipe.potion.shrinking=Ingrediente per la pozione del restringimento
-config.resize.recipe.potion.shrinking.tooltip=default: minecraft:brown_mushroom
 config.resize.recipe.potion.growth=Ingrediente per la pozione della crescita
-config.resize.recipe.potion.growth.tooltip=default: minecraft:red_mushroom

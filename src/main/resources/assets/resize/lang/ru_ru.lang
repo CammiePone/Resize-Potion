@@ -42,6 +42,4 @@ config.resize.title=GUI настройки Resizing Potion
 config.resize.recipe=Ингридиент зелья
 config.resize.recipe.tooltip=Предмет, нужный для создания зелья в варочной стойке
 config.resize.recipe.potion.shrinking=Ингридиент Зелья уменьшения
-config.resize.recipe.potion.shrinking.tooltip=по умолчанию: minecraft:brown_mushroom
 config.resize.recipe.potion.growth=Ингридиент Зелья роста
-config.resize.recipe.potion.growth.tooltip=по умолчанию: minecraft:red_mushroom

@@ -33,13 +33,11 @@ public class ModConfig {
 	public static class Recipe {
 		private static final String PREFIX = ModConfig.PREFIX + ".recipe";
 
-		@Name("Ingredient for the Shrinking Potion") 
-		@Comment("default: minecraft:brown_mushroom") 
+		@Name("Ingredient for the Shrinking Potion")
 		@LangKey(PREFIX + ".potion.shrinking") 
 		public String shrinkingIngredient = "minecraft:brown_mushroom";
 
-		@Name("Ingredient for the Growth Potion") 
-		@Comment("default: minecraft:red_mushroom") 
+		@Name("Ingredient for the Growth Potion")
 		@LangKey(PREFIX + ".potion.growth") 
 		public String growthIngredient = "minecraft:red_mushroom";
 	}
