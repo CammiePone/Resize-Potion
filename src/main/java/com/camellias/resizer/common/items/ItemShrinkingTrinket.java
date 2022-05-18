@@ -58,7 +58,7 @@ public class ItemShrinkingTrinket extends ItemActiveTrinket {
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		if ((player.ticksExisted % 20) == 0) {
-			player.addPotionEffect(new PotionEffect(Main.SHRINKING, 21, 0, true, false));
+			player.addPotionEffect(new PotionEffect(Main.SHRINKING, 101, 0, true, false));
 		}
 	}
 }
